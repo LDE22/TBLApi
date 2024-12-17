@@ -33,36 +33,41 @@ namespace TBLApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            if (string.IsNullOrWhiteSpace(loginDto.Login) || string.IsNullOrWhiteSpace(loginDto.Password))
+            try
             {
-                return BadRequest(new { message = "Логин и пароль обязательны." });
+                if (string.IsNullOrWhiteSpace(loginDto.Login) || string.IsNullOrWhiteSpace(loginDto.Password))
+                {
+                    return BadRequest("Логин и пароль обязательны.");
+                }
+
+                // SQL-запрос с кавычками для PostgreSQL
+                var user = await _context.Users
+                    .FromSqlRaw(@"SELECT * 
+                          FROM ""Users"" 
+                          WHERE (""Username"" = {0} OR ""Email"" = {0}) 
+                          AND ""Password"" = {1}", loginDto.Login, loginDto.Password)
+                    .FirstOrDefaultAsync();
+
+                if (user == null)
+                {
+                    return Unauthorized("Неверный логин или пароль.");
+                }
+
+                return Ok(new
+                {
+                    user.Id,
+                    user.Username,
+                    user.Email,
+                    user.Photo,
+                    user.Role
+                });
             }
-
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u =>
-                    (u.Username == loginDto.Login || u.Email == loginDto.Login)
-                    && u.Password == loginDto.Password);
-
-            if (user == null)
+            catch (Exception ex)
             {
-                return Unauthorized(new { message = "Неверный логин или пароль." });
+                Console.WriteLine($"Ошибка сервера: {ex.Message}");
+                return StatusCode(500, "Внутренняя ошибка сервера.");
             }
-
-            // Возвращаем JSON-ответ
-            return Ok(new
-            {
-                user.Id,
-                user.Username,
-                user.Email,
-                user.Photo,
-                user.LinkToProfile,
-                user.Name,
-                user.City,
-                user.Role
-            });
         }
-
-
     }
     public class LoginDto
     {
