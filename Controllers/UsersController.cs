@@ -52,6 +52,7 @@ namespace TBLApi.Controllers
                 {
                     return Unauthorized("Неверный логин или пароль.");
                 }
+                Console.WriteLine($"User найден: Username={user.Username}, Role={user.Role}");
 
                 return Ok(new
                 {
