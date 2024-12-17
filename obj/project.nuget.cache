@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "V5Z/3GoG38Q=",
+  "dgSpecHash": "sWme0hkiVNo=",
   "success": true,
-  "projectFilePath": "C:\\PRODJ\\2\\TBLApi\\TBLApi.csproj",
+  "projectFilePath": "C:\\PRODJ\\TBLApi\\TBLApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\loban\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\loban\\.nuget\\packages\\microsoft.aspnetcore.diagnostics.entityframeworkcore\\7.0.0\\microsoft.aspnetcore.diagnostics.entityframeworkcore.7.0.0.nupkg.sha512",

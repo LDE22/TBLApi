@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\PRODJ\\2\\TBLApi\\TBLApi.csproj": {}
+    "C:\\PRODJ\\TBLApi\\TBLApi.csproj": {}
   },
   "projects": {
-    "C:\\PRODJ\\2\\TBLApi\\TBLApi.csproj": {
+    "C:\\PRODJ\\TBLApi\\TBLApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\PRODJ\\2\\TBLApi\\TBLApi.csproj",
+        "projectUniqueName": "C:\\PRODJ\\TBLApi\\TBLApi.csproj",
         "projectName": "TBLApi",
-        "projectPath": "C:\\PRODJ\\2\\TBLApi\\TBLApi.csproj",
+        "projectPath": "C:\\PRODJ\\TBLApi\\TBLApi.csproj",
         "packagesPath": "C:\\Users\\loban\\.nuget\\packages\\",
-        "outputPath": "C:\\PRODJ\\2\\TBLApi\\obj\\",
+        "outputPath": "C:\\PRODJ\\TBLApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
