@@ -24,4 +24,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
+// Добавляем корневой маршрут
+app.MapGet("/", () => "TBLApi is running");
+
 app.Run();
