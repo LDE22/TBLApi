@@ -33,41 +33,31 @@ namespace TBLApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            try
+            if (string.IsNullOrWhiteSpace(loginDto.Login) || string.IsNullOrWhiteSpace(loginDto.Password))
             {
-                if (string.IsNullOrWhiteSpace(loginDto.Login) || string.IsNullOrWhiteSpace(loginDto.Password))
-                {
-                    return BadRequest("Логин и пароль обязательны.");
-                }
-
-                // SQL-запрос с кавычками для PostgreSQL
-                var user = await _context.Users
-                    .FromSqlRaw(@"SELECT * 
-                          FROM ""Users"" 
-                          WHERE (""Username"" = {0} OR ""Email"" = {0}) 
-                          AND ""Password"" = {1}", loginDto.Login, loginDto.Password)
-                    .FirstOrDefaultAsync();
-
-                if (user == null)
-                {
-                    return Unauthorized("Неверный логин или пароль.");
-                }
-                Console.WriteLine($"User найден: Username={user.Username}, Role={user.Role}");
-
-                return Ok(new
-                {
-                    user.Id,
-                    user.Username,
-                    user.Email,
-                    user.Photo,
-                    user.Role
-                });
+                return BadRequest("Логин и пароль обязательны.");
             }
-            catch (Exception ex)
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => (u.Username == loginDto.Login || u.Email == loginDto.Login)
+                                          && u.Password == loginDto.Password);
+
+            if (user == null)
             {
-                Console.WriteLine($"Ошибка сервера: {ex.Message}");
-                return StatusCode(500, "Внутренняя ошибка сервера.");
+                return Unauthorized("Неверный логин или пароль.");
             }
+
+            var response = new
+            {
+                user.Id,
+                user.Username,
+                user.Email,
+                user.Photo,
+                user.Role
+            };
+
+            Console.WriteLine($"Ответ сервера: {System.Text.Json.JsonSerializer.Serialize(response)}");
+            return Ok(response);
         }
     }
     public class LoginDto
