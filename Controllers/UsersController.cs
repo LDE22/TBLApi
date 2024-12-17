@@ -33,12 +33,25 @@ namespace TBLApi.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<User>> Login([FromBody] User loginUser)
         {
+            // Проверка на null и валидация входящих данных
+            if (loginUser == null || string.IsNullOrWhiteSpace(loginUser.Username) || string.IsNullOrWhiteSpace(loginUser.Password))
+            {
+                return BadRequest("Логин и пароль обязательны.");
+            }
+
+            // Логирование входящих данных для диагностики
+            Console.WriteLine($"Login attempt: Username={loginUser.Username}, Password={loginUser.Password}");
+
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Username == loginUser.Username && u.Password == loginUser.Password);
 
-            if (user == null) return Unauthorized("Invalid credentials");
+            if (user == null)
+            {
+                return Unauthorized("Неверные учётные данные.");
+            }
 
             return Ok(user);
         }
+
     }
 }
