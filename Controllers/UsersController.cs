@@ -31,27 +31,25 @@ namespace TBLApi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<User>> Login([FromBody] User loginUser)
+        public async Task<ActionResult<User>> Login([FromBody] LoginDto loginDto)
         {
-            // Проверка на null и валидация входящих данных
-            if (loginUser == null || string.IsNullOrWhiteSpace(loginUser.Username) || string.IsNullOrWhiteSpace(loginUser.Password))
+            if (string.IsNullOrWhiteSpace(loginDto.Login) || string.IsNullOrWhiteSpace(loginDto.Password))
             {
-                return BadRequest("Логин и пароль обязательны.");
+                return BadRequest("Логин (или Email) и пароль обязательны.");
             }
 
-            // Логирование входящих данных для диагностики
-            Console.WriteLine($"Login attempt: Username={loginUser.Username}, Password={loginUser.Password}");
-
+            // Поиск пользователя по логину (Username) или Email
             var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Username == loginUser.Username && u.Password == loginUser.Password);
+                .FirstOrDefaultAsync(u =>
+                    (u.Username == loginDto.Login || u.Email == loginDto.Login)
+                    && u.Password == loginDto.Password);
 
             if (user == null)
             {
-                return Unauthorized("Неверные учётные данные.");
+                return Unauthorized("Неверный логин (или Email) или пароль.");
             }
 
             return Ok(user);
         }
-
     }
 }
