@@ -31,14 +31,13 @@ namespace TBLApi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<User>> Login([FromBody] LoginDto loginDto)
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             if (string.IsNullOrWhiteSpace(loginDto.Login) || string.IsNullOrWhiteSpace(loginDto.Password))
             {
-                return BadRequest("Логин (или Email) и пароль обязательны.");
+                return BadRequest(new { message = "Логин и пароль обязательны." });
             }
 
-            // Поиск пользователя
             var user = await _context.Users
                 .FirstOrDefaultAsync(u =>
                     (u.Username == loginDto.Login || u.Email == loginDto.Login)
@@ -46,25 +45,23 @@ namespace TBLApi.Controllers
 
             if (user == null)
             {
-                return Unauthorized("Неверный логин (или Email) или пароль.");
+                return Unauthorized(new { message = "Неверный логин или пароль." });
             }
 
-            // Возвращаем полный объект пользователя
-            var result = new User
+            // Возвращаем JSON-ответ
+            return Ok(new
             {
-                Id = user.Id,
-                Username = user.Username,
-                Password = user.Password,
-                Email = user.Email,
-                Photo = user.Photo,
-                LinkToProfile = user.LinkToProfile,
-                Name = user.Name,
-                City = user.City,
-                Role = user.Role
-            };
-
-            return Ok(result);
+                user.Id,
+                user.Username,
+                user.Email,
+                user.Photo,
+                user.LinkToProfile,
+                user.Name,
+                user.City,
+                user.Role
+            });
         }
+
 
     }
     public class LoginDto

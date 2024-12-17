@@ -1,31 +1,17 @@
-using Microsoft.EntityFrameworkCore;
-using TBLApi.Data;
-
 var builder = WebApplication.CreateBuilder(args);
 
-// Добавляем строку подключения
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = null; // Отключаем camelCase (по желанию)
+    });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 app.UseHttpsRedirection();
-app.UseStaticFiles(); // Обработка статических файлов
+app.UseRouting();
 app.UseAuthorization();
-app.MapControllers();
 
-// Добавляем корневой маршрут
-app.MapGet("/", () => "TBLApi is running");
+app.MapControllers();
 
 app.Run();
