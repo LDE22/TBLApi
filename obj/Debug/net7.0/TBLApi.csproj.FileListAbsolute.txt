@@ -95,3 +95,4 @@ C:\PRODJ\TBLApi\obj\Debug\net7.0\refint\TBLApi.dll
 C:\PRODJ\TBLApi\obj\Debug\net7.0\TBLApi.pdb
 C:\PRODJ\TBLApi\obj\Debug\net7.0\TBLApi.genruntimeconfig.cache
 C:\PRODJ\TBLApi\obj\Debug\net7.0\ref\TBLApi.dll
+C:\PRODJ\TBLApi\bin\Debug\net7.0\TBLApi.staticwebassets.runtime.json

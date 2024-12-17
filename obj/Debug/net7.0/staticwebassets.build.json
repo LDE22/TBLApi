@@ -1,12 +1,125 @@
 {
   "Version": 1,
-  "Hash": "jnwHKRLDdJynhyiQK4VkGLJ/u4yw/xnl0CJWPHVq534=",
+  "Hash": "87zlQ2IrdWVjfTJ3OPakq2A2A+o4UYwd9oysK7RbCdM=",
   "Source": "TBLApi",
   "BasePath": "_content/TBLApi",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "TBLApi\\wwwroot",
+      "Source": "TBLApi",
+      "ContentRoot": "C:\\PRODJ\\TBLApi\\wwwroot\\",
+      "BasePath": "_content/TBLApi",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\PRODJ\\TBLApi\\wwwroot\\favicon.ico",
+      "SourceId": "TBLApi",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\PRODJ\\TBLApi\\wwwroot\\",
+      "BasePath": "_content/TBLApi",
+      "RelativePath": "favicon#[.{fingerprint}]?.ico",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "d5s08p5cv5",
+      "Integrity": "fxWP3p7ZC0zS+dWcpexg/TmvPm8bCL2RTXYQSf4cY3c=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\favicon.ico"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "favicon.d5s08p5cv5.ico",
+      "AssetFile": "C:\\PRODJ\\TBLApi\\wwwroot\\favicon.ico",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "67646"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/x-icon"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"fxWP3p7ZC0zS+dWcpexg/TmvPm8bCL2RTXYQSf4cY3c=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 17 Dec 2024 19:40:04 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "d5s08p5cv5"
+        },
+        {
+          "Name": "label",
+          "Value": "favicon.ico"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-fxWP3p7ZC0zS+dWcpexg/TmvPm8bCL2RTXYQSf4cY3c="
+        }
+      ]
+    },
+    {
+      "Route": "favicon.ico",
+      "AssetFile": "C:\\PRODJ\\TBLApi\\wwwroot\\favicon.ico",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "67646"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/x-icon"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"fxWP3p7ZC0zS+dWcpexg/TmvPm8bCL2RTXYQSf4cY3c=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 17 Dec 2024 19:40:04 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-fxWP3p7ZC0zS+dWcpexg/TmvPm8bCL2RTXYQSf4cY3c="
+        }
+      ]
+    }
+  ]
 }

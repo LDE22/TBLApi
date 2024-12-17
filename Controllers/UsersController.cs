@@ -52,4 +52,10 @@ namespace TBLApi.Controllers
             return Ok(user);
         }
     }
+    public class LoginDto
+    {
+        public required string Login { get; set; } // Может быть Email или Username
+        public required string Password { get; set; }
+    }
+
 }
