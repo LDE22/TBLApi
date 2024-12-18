@@ -124,14 +124,14 @@
         }
       }
     },
-    "/api/Users/upload-photo/{userId}": {
-      "post": {
+    "/api/Users/update-avatar/{id}": {
+      "put": {
         "tags": [
           "Users"
         ],
         "parameters": [
           {
-            "name": "userId",
+            "name": "id",
             "in": "path",
             "required": true,
             "style": "simple",

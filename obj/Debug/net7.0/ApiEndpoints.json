@@ -104,14 +104,14 @@
   },
   {
     "ContainingType": "TBLApi.Controllers.UsersController",
-    "Method": "UploadPhoto",
-    "RelativePath": "api/Users/upload-photo/{userId}",
-    "HttpMethod": "POST",
+    "Method": "UpdateAvatar",
+    "RelativePath": "api/Users/update-avatar/{id}",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "userId",
+        "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
       },

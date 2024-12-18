@@ -63,30 +63,31 @@ namespace TBLApi.Controllers
         }
 
 
-        [HttpPost("upload-photo/{userId}")]
-        public async Task<IActionResult> UploadPhoto(int userId, [FromBody] PhotoUploadRequest request)
+        [HttpPut("update-avatar/{id}")]
+        public async Task<IActionResult> UpdateAvatar(int id, [FromBody] PhotoUploadRequest request)
         {
+            Console.WriteLine($"[INFO] Вызван метод UpdateAvatar для пользователя с ID: {id}");
+
             if (string.IsNullOrEmpty(request.PhotoBase64))
-                return BadRequest("Изображение отсутствует.");
-
-            try
             {
-                // Найти пользователя
-                var user = await _context.Users.FindAsync(userId);
-                if (user == null)
-                    return NotFound("Пользователь не найден.");
-
-                // Сохранение изображения
-                user.PhotoBase64 = request.PhotoBase64;
-                await _context.SaveChangesAsync();
-
-                return Ok("Фото успешно загружено.");
+                Console.WriteLine("[ERROR] Base64 строка пуста.");
+                return BadRequest("Base64 строка не может быть пустой.");
             }
-            catch (Exception ex)
+
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
             {
-                return StatusCode(500, $"Ошибка при загрузке изображения: {ex.Message}");
+                Console.WriteLine($"[ERROR] Пользователь с ID {id} не найден.");
+                return NotFound("Пользователь не найден.");
             }
+
+            user.PhotoBase64 = request.PhotoBase64;
+            await _context.SaveChangesAsync();
+
+            Console.WriteLine($"[INFO] Аватарка пользователя с ID {id} обновлена.");
+            return Ok(new { Message = "Аватарка успешно обновлена." });
         }
+
 
         public class PhotoUploadRequest
         {
