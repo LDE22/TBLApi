@@ -88,7 +88,6 @@ C:\PRODJ\TBLApi\obj\Debug\net7.0\staticwebassets\msbuild.build.TBLApi.props
 C:\PRODJ\TBLApi\obj\Debug\net7.0\staticwebassets\msbuild.buildMultiTargeting.TBLApi.props
 C:\PRODJ\TBLApi\obj\Debug\net7.0\staticwebassets\msbuild.buildTransitive.TBLApi.props
 C:\PRODJ\TBLApi\obj\Debug\net7.0\staticwebassets.pack.json
-C:\PRODJ\TBLApi\obj\Debug\net7.0\staticwebassets.upToDateCheck.txt
 C:\PRODJ\TBLApi\obj\Debug\net7.0\TBLApi.csproj.Up2Date
 C:\PRODJ\TBLApi\obj\Debug\net7.0\TBLApi.dll
 C:\PRODJ\TBLApi\obj\Debug\net7.0\refint\TBLApi.dll

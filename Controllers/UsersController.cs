@@ -19,8 +19,16 @@ namespace TBLApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            var users = await _context.Users.ToListAsync();
+
+            foreach (var user in users)
+            {
+                Console.WriteLine($"[DEBUG API] Username: {user.Username}, Role: {user.Role}");
+            }
+
+            return Ok(users);
         }
+
 
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(User user)
