@@ -32,28 +32,52 @@ namespace TBLApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] User updatedUser)
         {
-            if (id != updatedUser.Id)
-                return BadRequest("ID пользователя не совпадает.");
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                return NotFound();
 
-            var existingUser = await _context.Users.FindAsync(id);
-            if (existingUser == null)
-                return NotFound("Пользователь не найден.");
+            user.PhotoBase64 = string.IsNullOrEmpty(updatedUser.PhotoBase64)
+                ? User.DefaultAvatarBase64 // Используем DefaultAvatarBase64 из класса User
+                : updatedUser.PhotoBase64;
 
-            // Обновляем данные пользователя
-            existingUser.Name = updatedUser.Name;
-            existingUser.City = updatedUser.City;
-            existingUser.Description = updatedUser.Description;
-            existingUser.Photo = updatedUser.Photo;
+            user.Username = updatedUser.Username;
+            user.Email = updatedUser.Email;
+            user.Role = updatedUser.Role;
+            // Обновите другие поля...
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+
+        [HttpPost("upload-photo/{userId}")]
+        public async Task<IActionResult> UploadPhoto(int userId, [FromBody] PhotoUploadRequest request)
+        {
+            if (string.IsNullOrEmpty(request.PhotoBase64))
+                return BadRequest("Изображение отсутствует.");
 
             try
             {
+                // Найти пользователя
+                var user = await _context.Users.FindAsync(userId);
+                if (user == null)
+                    return NotFound("Пользователь не найден.");
+
+                // Сохранение изображения
+                user.PhotoBase64 = request.PhotoBase64;
                 await _context.SaveChangesAsync();
-                return Ok("Пользователь обновлён.");
+
+                return Ok("Фото успешно загружено.");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Ошибка обновления данных: {ex.Message}");
+                return StatusCode(500, $"Ошибка при загрузке изображения: {ex.Message}");
             }
+        }
+
+        public class PhotoUploadRequest
+        {
+            public string PhotoBase64 { get; set; }
         }
 
 
@@ -87,7 +111,7 @@ namespace TBLApi.Controllers
                 user.Id,
                 user.Username,
                 user.Email,
-                user.Photo,
+                user.PhotoBase64,
                 user.Role
             };
 

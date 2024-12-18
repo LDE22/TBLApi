@@ -3,25 +3,17 @@ namespace TBLApi.Models
 {
     public class User
     {
-        [Column("Id")]
         public int Id { get; set; }
-        [Column("Username")]
-        public required string Username { get; set; }
-        [Column("Password")]
-        public required string Password { get; set; }
-        [Column("Email")]
-        public required string Email { get; set; }
-        [Column("Photo")]
-        public string Photo { get; set; } = "default_avatar.png";
-        [Column("LinkToProfile")]
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Email { get; set; }
+        public string PhotoBase64 { get; set; } = DefaultAvatarBase64;
         public string? LinkToProfile { get; set; }
-        [Column("Name")]
         public string? Name { get; set; }
-        [Column("City")]
         public string? City { get; set; } = "Город";
-        [Column("Role")]
-        public required string Role { get; set; }
-        [Column("Description")]
+        public string Role { get; set; }
         public string Description { get; set; }
+
+        public static string DefaultAvatarBase64 => "data:image/png;base64,iVBORw0KGgoAAA...";
     }
 }
