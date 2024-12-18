@@ -29,6 +29,33 @@ namespace TBLApi.Controllers
             return Ok(users);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] User updatedUser)
+        {
+            if (id != updatedUser.Id)
+                return BadRequest("ID пользователя не совпадает.");
+
+            var existingUser = await _context.Users.FindAsync(id);
+            if (existingUser == null)
+                return NotFound("Пользователь не найден.");
+
+            // Обновляем данные пользователя
+            existingUser.Name = updatedUser.Name;
+            existingUser.City = updatedUser.City;
+            existingUser.Description = updatedUser.Description;
+            existingUser.Photo = updatedUser.Photo;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok("Пользователь обновлён.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ошибка обновления данных: {ex.Message}");
+            }
+        }
+
 
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(User user)

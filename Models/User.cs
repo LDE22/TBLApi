@@ -21,5 +21,7 @@ namespace TBLApi.Models
         public string? City { get; set; } = "Город";
         [Column("Role")]
         public required string Role { get; set; }
+        [Column("Description")]
+        public string Description { get; set; }
     }
 }
