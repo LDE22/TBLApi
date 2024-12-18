@@ -124,6 +124,49 @@
         }
       }
     },
+    "/api/Users/upload-photo/{userId}": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhotoUploadRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhotoUploadRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhotoUploadRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/Users/register": {
       "post": {
         "tags": [
@@ -220,6 +263,16 @@
         },
         "additionalProperties": false
       },
+      "PhotoUploadRequest": {
+        "type": "object",
+        "properties": {
+          "photoBase64": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Ticket": {
         "type": "object",
         "properties": {
@@ -257,7 +310,7 @@
             "type": "string",
             "nullable": true
           },
-          "photo": {
+          "photoBase64": {
             "type": "string",
             "nullable": true
           },

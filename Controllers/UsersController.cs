@@ -34,18 +34,31 @@ namespace TBLApi.Controllers
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
+            {
                 return NotFound();
+            }
 
-            user.PhotoBase64 = string.IsNullOrEmpty(updatedUser.PhotoBase64)
-                ? User.DefaultAvatarBase64 // Используем DefaultAvatarBase64 из класса User
-                : updatedUser.PhotoBase64;
+            // Обновляем только переданные поля
+            if (!string.IsNullOrEmpty(updatedUser.Username))
+                user.Username = updatedUser.Username;
 
-            user.Username = updatedUser.Username;
-            user.Email = updatedUser.Email;
-            user.Role = updatedUser.Role;
-            // Обновите другие поля...
+            if (!string.IsNullOrEmpty(updatedUser.Password))
+                user.Password = updatedUser.Password;
+
+            if (!string.IsNullOrEmpty(updatedUser.Email))
+                user.Email = updatedUser.Email;
+
+            if (!string.IsNullOrEmpty(updatedUser.PhotoBase64))
+                user.PhotoBase64 = updatedUser.PhotoBase64;
+
+            if (!string.IsNullOrEmpty(updatedUser.Role))
+                user.Role = updatedUser.Role;
+
+            if (!string.IsNullOrEmpty(updatedUser.Description))
+                user.Description = updatedUser.Description;
 
             await _context.SaveChangesAsync();
+
             return NoContent();
         }
 
@@ -123,6 +136,10 @@ namespace TBLApi.Controllers
     {
         public required string Login { get; set; } // Может быть Email или Username
         public required string Password { get; set; }
+    }
+    public static class AvatarDefaults
+    {
+        public static string DefaultAvatarBase64 => "data:image/png;base64,iVBORw0KGgoAAA...";
     }
 
 }

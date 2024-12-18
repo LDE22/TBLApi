@@ -101,5 +101,26 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.UsersController",
+    "Method": "UploadPhoto",
+    "RelativePath": "api/Users/upload-photo/{userId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "TBLApi.Controllers.UsersController\u002BPhotoUploadRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]
