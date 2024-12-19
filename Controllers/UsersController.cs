@@ -201,16 +201,33 @@ namespace TBLApi.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> AddService([FromBody] ServiceModel service)
         {
-            if (service == null || string.IsNullOrWhiteSpace(service.Name) || service.Price <= 0)
+            if (service.Specialist != null)
             {
-                return BadRequest(new { message = "Неверные данные. Проверьте ввод." });
+                var existingSpecialist = await _context.Users.FindAsync(service.Specialist.Id);
+                if (existingSpecialist == null)
+                {
+                    return BadRequest(new { message = "Specialist not found." });
+                }
+                service.SpecialistId = existingSpecialist.Id;
+            }
+            else if (service.SpecialistId > 0)
+            {
+                var existingSpecialist = await _context.Users.FindAsync(service.SpecialistId);
+                if (existingSpecialist == null)
+                {
+                    return BadRequest(new { message = "SpecialistId not valid." });
+                }
+            }
+            else
+            {
+                return BadRequest(new { message = "Specialist or SpecialistId must be provided." });
             }
 
             _context.Services.Add(service);
             await _context.SaveChangesAsync();
-            return Ok(new { message = "Услуга добавлена успешно." });
-        }
 
+            return Ok(new { message = "Service added successfully." });
+        }
 
         [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateService(int id, [FromBody] Service updatedService)

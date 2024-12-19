@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TBLApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6bf01491a21661d25c0e7e7f1d31aea9a9a86819")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3ddc82767968dca54bc2311136765e3d4cbe4cf9")]
 [assembly: System.Reflection.AssemblyProductAttribute("TBLApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TBLApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
