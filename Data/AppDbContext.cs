@@ -13,6 +13,8 @@ namespace TBLApi.Data
         public DbSet<ServiceModel> Services { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<ActionLog> ActionLogs { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -259,6 +259,16 @@
   },
   {
     "ContainingType": "TBLApi.Controllers.UsersController",
+    "Method": "GetActionLogs",
+    "RelativePath": "api/Users/logs",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.UsersController",
     "Method": "Register",
     "RelativePath": "api/Users/register",
     "HttpMethod": "POST",
@@ -342,6 +352,22 @@
       {
         "Name": "request",
         "Type": "TBLApi.Controllers.PhotoUploadRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.UsersController",
+    "Method": "GetLogsByUser",
+    "RelativePath": "api/Users/user/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

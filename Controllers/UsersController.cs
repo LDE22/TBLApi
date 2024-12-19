@@ -160,6 +160,32 @@ namespace TBLApi.Controllers
             var users = await _context.Users.ToListAsync();
             return Ok(users);
         }
+        [HttpGet("logs")]
+        public async Task<IActionResult> GetActionLogs()
+        {
+            var logs = await _context.ActionLogs
+                .Include(log => log.User) // Если требуется информация о пользователе
+                .OrderByDescending(log => log.Timestamp)
+                .ToListAsync();
+
+            return Ok(logs);
+        }
+        // Получение логов по UserId
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetLogsByUser(int userId)
+        {
+            var logs = await _context.ActionLogs
+                .Where(log => log.UserId == userId)
+                .OrderByDescending(log => log.Timestamp)
+                .ToListAsync();
+
+            if (!logs.Any())
+            {
+                return NotFound(new { message = $"No logs found for User ID {userId}." });
+            }
+
+            return Ok(logs);
+        }
     }
     [Route("api/[controller]")]
     [ApiController]
