@@ -186,6 +186,35 @@ namespace TBLApi.Controllers
 
             return Ok(logs);
         }
+        [HttpPut("update-profile/{id}")]
+        public async Task<IActionResult> UpdateProfile(int id, [FromBody] User updatedUser)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found." });
+            }
+
+            // Обновляем данные пользователя
+            user.Name = updatedUser.Name ?? user.Name;
+            user.City = updatedUser.City ?? user.City;
+            user.Description = updatedUser.Description ?? user.Description;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            // Обновление города у всех услуг специалиста
+            var services = _context.Services.Where(s => s.SpecialistId == user.Id);
+            foreach (var service in services)
+            {
+                service.City = user.City; // Устанавливаем новый город
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Profile updated successfully." });
+        }
+
     }
     [Route("api/[controller]")]
     [ApiController]
@@ -201,27 +230,14 @@ namespace TBLApi.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> AddService([FromBody] ServiceModel service)
         {
-            if (service.Specialist != null)
+            var specialist = await _context.Users.FindAsync(service.SpecialistId);
+            if (specialist == null)
             {
-                var existingSpecialist = await _context.Users.FindAsync(service.Specialist.Id);
-                if (existingSpecialist == null)
-                {
-                    return BadRequest(new { message = "Specialist not found." });
-                }
-                service.SpecialistId = existingSpecialist.Id;
+                return BadRequest(new { message = "Specialist not found." });
             }
-            else if (service.SpecialistId > 0)
-            {
-                var existingSpecialist = await _context.Users.FindAsync(service.SpecialistId);
-                if (existingSpecialist == null)
-                {
-                    return BadRequest(new { message = "SpecialistId not valid." });
-                }
-            }
-            else
-            {
-                return BadRequest(new { message = "Specialist or SpecialistId must be provided." });
-            }
+
+            // Привязка города к услуге
+            service.City = specialist.City;
 
             _context.Services.Add(service);
             await _context.SaveChangesAsync();
@@ -276,12 +292,17 @@ namespace TBLApi.Controllers
         public async Task<IActionResult> SearchServices(string query, string city)
         {
             var services = await _context.Services
-                .Where(s => EF.Functions.ILike(s.Name, $"%{query}%") && s.Specialist.City == city)
-                .Include(s => s.Specialist)
+                .Where(s => EF.Functions.ILike(s.Name, $"%{query}%") && s.City == city)
                 .ToListAsync();
+
+            if (!services.Any())
+            {
+                return NotFound(new { message = "No services found in this city." });
+            }
 
             return Ok(services);
         }
+
     }
     [Route("api/[controller]")]
     [ApiController]
