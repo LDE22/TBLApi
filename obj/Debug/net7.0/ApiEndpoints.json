@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "TBLApi.Controllers.ChatController",
+    "Method": "GetChats",
+    "RelativePath": "api/Chat/chats/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.ChatController",
     "Method": "GetConversation",
     "RelativePath": "api/Chat/conversation/{userId1}/{userId2}",
     "HttpMethod": "GET",

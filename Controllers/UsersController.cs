@@ -300,6 +300,29 @@ namespace TBLApi.Controllers
 
             return Ok(new { message = "Chat deleted successfully." });
         }
+        [HttpGet("chats/{userId}")]
+        public async Task<IActionResult> GetChats(int userId)
+        {
+            // ѕолучаем список чатов дл€ пользовател€
+            var chats = await _context.Messages
+                .Where(m => m.SenderId == userId || m.ReceiverId == userId)
+                .GroupBy(m => m.SenderId == userId ? m.ReceiverId : m.SenderId)
+                .Select(group => new
+                {
+                    ChatId = group.Key,
+                    LastMessage = group.OrderByDescending(m => m.Timestamp).FirstOrDefault().Content,
+                    Timestamp = group.Max(m => m.Timestamp)
+                })
+                .ToListAsync();
+
+            if (!chats.Any())
+            {
+                return NotFound(new { message = "No chats found for the user." });
+            }
+
+            return Ok(chats);
+        }
+
     }
     [Route("api/[controller]")]
     [ApiController]
