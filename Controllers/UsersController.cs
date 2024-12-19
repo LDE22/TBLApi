@@ -303,26 +303,21 @@ namespace TBLApi.Controllers
         [HttpGet("chats/{userId}")]
         public async Task<IActionResult> GetChats(int userId)
         {
-            // Получаем список чатов для пользователя
             var chats = await _context.Messages
                 .Where(m => m.SenderId == userId || m.ReceiverId == userId)
                 .GroupBy(m => m.SenderId == userId ? m.ReceiverId : m.SenderId)
-                .Select(group => new
+                .Select(g => new ChatPreview
                 {
-                    ChatId = group.Key,
-                    LastMessage = group.OrderByDescending(m => m.Timestamp).FirstOrDefault().Content,
-                    Timestamp = group.Max(m => m.Timestamp)
+                    ChatId = g.Key,
+                    Name = _context.Users.FirstOrDefault(u => u.Id == g.Key).Username,
+                    LastMessage = g.OrderByDescending(m => m.Timestamp).First().Content,
+                    Timestamp = g.Max(m => m.Timestamp),
+                    TargetUserId = g.Key // Указание ID пользователя
                 })
                 .ToListAsync();
 
-            if (!chats.Any())
-            {
-                return NotFound(new { message = "No chats found for the user." });
-            }
-
             return Ok(chats);
         }
-
     }
     [Route("api/[controller]")]
     [ApiController]
