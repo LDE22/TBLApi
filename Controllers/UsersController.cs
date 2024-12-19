@@ -170,6 +170,18 @@ namespace TBLApi.Controllers
 
             return Ok(logs);
         }
+
+        [HttpGet("{id}")]
+public async Task<IActionResult> GetUserById(int id)
+{
+    var user = await _context.Users.FindAsync(id);
+    if (user == null)
+    {
+        return NotFound(new { message = "Пользователь не найден" });
+    }
+    return Ok(user);
+}
+
         // Получение логов по UserId
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetLogsByUser(int userId)
@@ -187,22 +199,28 @@ namespace TBLApi.Controllers
             return Ok(logs);
         }
         [HttpPut("update-profile/{id}")]
-        public async Task<IActionResult> UpdateProfile(int id, User model)
+        public async Task<IActionResult> UpdateProfile(int id, [FromBody] UpdateProfileModel model)
         {
+            // Найти пользователя в базе данных
             var user = await _context.Users.FindAsync(id);
-            if (user == null) return NotFound(new { message = "User not found" });
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
 
-            // Обновляем только те поля, которые были переданы
-            if (!string.IsNullOrEmpty(model.Username)) user.Username = model.Username;
-            if (!string.IsNullOrEmpty(model.Password)) user.Password = model.Password;
-            if (!string.IsNullOrEmpty(model.Email)) user.Email = model.Email;
-            if (!string.IsNullOrEmpty(model.Role)) user.Role = model.Role;
-            user.Name = model.Name;
-            user.City = model.City;
-            user.Description = model.Description;
+            // Обновление данных, только если они указаны в запросе
+            user.Username = !string.IsNullOrEmpty(model.Username) ? model.Username : user.Username;
+            user.Password = !string.IsNullOrEmpty(model.Password) ? model.Password : user.Password;
+            user.Email = !string.IsNullOrEmpty(model.Email) ? model.Email : user.Email;
+            user.Role = !string.IsNullOrEmpty(model.Role) ? model.Role : user.Role;
+            user.Name = !string.IsNullOrEmpty(model.Name) ? model.Name : user.Name;
+            user.City = !string.IsNullOrEmpty(model.City) ? model.City : user.City;
+            user.Description = !string.IsNullOrEmpty(model.Description) ? model.Description : user.Description;
 
+            // Сохранение изменений
             await _context.SaveChangesAsync();
-            return Ok(user);
+
+            return Ok(new { message = "Profile updated successfully", user });
         }
     }
     [Route("api/[controller]")]
