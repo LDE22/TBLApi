@@ -90,7 +90,7 @@ namespace TBLApi.Controllers
 
             if (!user.IsEmailConfirmed)
             {
-                return Unauthorized(new { message = "Подтвердите вашу почту" });
+                return Unauthorized(new { message = "Please verify your email" });
             }
 
             return Ok(new { user.Id, user.Username, user.Email, user.Role, user.Description, user.City, user.IsEmailConfirmed, user.PhotoBase64});
@@ -201,10 +201,16 @@ namespace TBLApi.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> AddService([FromBody] ServiceModel service)
         {
+            if (service == null || string.IsNullOrWhiteSpace(service.Name) || service.Price <= 0)
+            {
+                return BadRequest(new { message = "Неверные данные. Проверьте ввод." });
+            }
+
             _context.Services.Add(service);
             await _context.SaveChangesAsync();
-            return Ok(new { message = "Service added successfully." });
+            return Ok(new { message = "Услуга добавлена успешно." });
         }
+
 
         [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateService(int id, [FromBody] Service updatedService)
@@ -237,7 +243,15 @@ namespace TBLApi.Controllers
         [HttpGet("specialist/{specialistId}")]
         public async Task<IActionResult> GetServicesBySpecialist(int specialistId)
         {
-            var services = await _context.Services.Where(s => s.SpecialistId == specialistId).ToListAsync();
+            var services = await _context.Services
+                .Where(s => s.SpecialistId == specialistId)
+                .ToListAsync();
+
+            if (!services.Any())
+            {
+                return Ok(new { message = "Услуг нет." });
+            }
+
             return Ok(services);
         }
 
