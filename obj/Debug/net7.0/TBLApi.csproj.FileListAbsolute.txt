@@ -96,3 +96,12 @@ C:\PRODJ\TBLApi\obj\Debug\net7.0\TBLApi.genruntimeconfig.cache
 C:\PRODJ\TBLApi\obj\Debug\net7.0\ref\TBLApi.dll
 C:\PRODJ\TBLApi\bin\Debug\net7.0\TBLApi.staticwebassets.runtime.json
 C:\PRODJ\TBLApi\obj\Debug\net7.0\staticwebassets.upToDateCheck.txt
+C:\PRODJ\TBLApi\bin\Debug\net7.0\BCrypt.Net-Next.dll
+C:\PRODJ\TBLApi\bin\Debug\net7.0\BouncyCastle.Cryptography.dll
+C:\PRODJ\TBLApi\bin\Debug\net7.0\MailKit.dll
+C:\PRODJ\TBLApi\bin\Debug\net7.0\MimeKit.dll
+C:\PRODJ\TBLApi\bin\Debug\net7.0\System.Formats.Asn1.dll
+C:\PRODJ\TBLApi\bin\Debug\net7.0\System.Security.Cryptography.Pkcs.dll
+C:\PRODJ\TBLApi\bin\Debug\net7.0\System.Text.Encoding.CodePages.dll
+C:\PRODJ\TBLApi\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
+C:\PRODJ\TBLApi\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Text.Encoding.CodePages.dll

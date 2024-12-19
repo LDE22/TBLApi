@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "87zlQ2IrdWVjfTJ3OPakq2A2A+o4UYwd9oysK7RbCdM=",
+  "Hash": "9j/laJKSxiGGD/9ymaHF8amGTqMyf9gumKVh248H23I=",
   "Source": "TBLApi",
   "BasePath": "_content/TBLApi",
   "Mode": "Default",
@@ -62,7 +62,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 17 Dec 2024 19:40:04 GMT"
+          "Value": "Thu, 19 Dec 2024 12:18:42 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -107,7 +107,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 17 Dec 2024 19:40:04 GMT"
+          "Value": "Thu, 19 Dec 2024 12:18:42 GMT"
         },
         {
           "Name": "Cache-Control",

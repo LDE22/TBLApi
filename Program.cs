@@ -1,20 +1,31 @@
 using Microsoft.EntityFrameworkCore;
 using TBLApi.Data;
+using TBLApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Добавляем поддержку контроллеров
 builder.Services.AddControllers();
 
-// Добавляем Swagger для документирования API
+// Настройка Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Настройка строки подключения к PostgreSQL
+// Чтение параметров SMTP из конфигурации
+var smtpSettings = builder.Configuration.GetSection("SmtpSettings");
+builder.Services.AddSingleton<IEmailSender>(provider =>
+    new SmtpEmailService(
+        smtpSettings["Server"],
+        int.Parse(smtpSettings["Port"]),
+        smtpSettings["User"],
+        smtpSettings["Password"]
+    ));
+
+// Подключение к базе данных
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Добавляем CORS для поддержки внешних клиентов
+// Настройка CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -27,7 +38,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Настройка Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -35,12 +45,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseRouting();
-
 app.UseCors("AllowAll");
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

@@ -2,6 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TBLApi.Data;
 using TBLApi.Models;
+using TBLApi.Services;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using BCrypt.Net;
 
 namespace TBLApi.Controllers
 {
@@ -10,137 +16,335 @@ namespace TBLApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IEmailSender _emailSender;
 
-        public UsersController(AppDbContext context)
+        public UsersController(AppDbContext context, IEmailSender emailSender)
         {
             _context = context;
+            _emailSender = emailSender;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] User user)
         {
-            var users = await _context.Users.ToListAsync();
-
-            foreach (var user in users)
+            if (await _context.Users.AnyAsync(u => u.Email == user.Email))
             {
-                Console.WriteLine($"[DEBUG API] Username: {user.Username}, Role: {user.Role}");
+                return BadRequest(new { message = "Email is already registered." });
             }
 
-            return Ok(users);
-        }
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            user.EmailConfirmationToken = Guid.NewGuid().ToString();
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] User updatedUser)
-        {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            // Обновляем только переданные поля
-            if (!string.IsNullOrEmpty(updatedUser.Username))
-                user.Username = updatedUser.Username;
-
-            if (!string.IsNullOrEmpty(updatedUser.Password))
-                user.Password = updatedUser.Password;
-
-            if (!string.IsNullOrEmpty(updatedUser.Email))
-                user.Email = updatedUser.Email;
-
-            if (!string.IsNullOrEmpty(updatedUser.PhotoBase64))
-                user.PhotoBase64 = updatedUser.PhotoBase64;
-
-            if (!string.IsNullOrEmpty(updatedUser.Role))
-                user.Role = updatedUser.Role;
-
-            if (!string.IsNullOrEmpty(updatedUser.Description))
-                user.Description = updatedUser.Description;
-
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            var confirmationLink = $"{Request.Scheme}://{Request.Host}/api/users/confirm-email/{user.EmailConfirmationToken}";
+            await _emailSender.SendEmailAsync(
+                user.Email,
+                "Confirm your email",
+                $"Click <a href='{confirmationLink}'>here</a> to confirm your email."
+            );
+
+            return Ok(new { message = "Registration successful. Please confirm your email." });
         }
 
+        [HttpPost("send-email")]
+        public async Task<IActionResult> SendEmail([FromBody] EmailRequest model)
+        {
+            if (string.IsNullOrWhiteSpace(model.To) || string.IsNullOrWhiteSpace(model.Subject) || string.IsNullOrWhiteSpace(model.Body))
+            {
+                return BadRequest("All fields (To, Subject, Body) must be provided.");
+            }
+
+            await _emailSender.SendEmailAsync(model.To, model.Subject, model.Body);
+            return Ok(new { message = "Email sent successfully." });
+        }
+
+        [HttpGet("confirm-email/{token}")]
+        public async Task<IActionResult> ConfirmEmail(string token)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.EmailConfirmationToken == token);
+            if (user == null)
+            {
+                return BadRequest(new { message = "Invalid confirmation token." });
+            }
+
+            user.IsEmailConfirmed = true;
+            user.EmailConfirmationToken = null;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Email confirmed successfully!" });
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginRequestModel model)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == model.Login || u.Email == model.Login);
+
+            if (user == null || !BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
+            {
+                return Unauthorized(new { message = "Invalid login or password." });
+            }
+
+            if (!user.IsEmailConfirmed)
+            {
+                return Unauthorized(new { message = "Please confirm your email to log in." });
+            }
+
+            return Ok(new { user.Id, user.Username, user.Email, user.Role });
+        }
+
+        [HttpPost("send-password-reset")]
+        public async Task<IActionResult> SendPasswordReset([FromBody] PasswordResetRequestModel model)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+
+            if (user == null)
+            {
+                return BadRequest(new { message = "Email not found." });
+            }
+
+            user.PasswordResetToken = Guid.NewGuid().ToString();
+            user.PasswordResetExpiration = DateTime.UtcNow.AddHours(1);
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            var resetUrl = $"{Request.Scheme}://{Request.Host}/api/Users/reset-password/{user.PasswordResetToken}";
+            await _emailSender.SendEmailAsync(user.Email, "Reset your password", $"Click <a href='{resetUrl}'>here</a> to reset your password.");
+
+            return Ok(new { message = "Password reset email sent." });
+        }
+
+        [HttpPost("reset-password/{token}")]
+        public async Task<IActionResult> ResetPassword(string token, [FromBody] PasswordResetModel model)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == token && u.PasswordResetExpiration > DateTime.UtcNow);
+
+            if (user == null)
+            {
+                return BadRequest(new { message = "Invalid or expired token." });
+            }
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
+            user.PasswordResetToken = null;
+            user.PasswordResetExpiration = null;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Password reset successfully." });
+        }
 
         [HttpPut("update-avatar/{id}")]
         public async Task<IActionResult> UpdateAvatar(int id, [FromBody] PhotoUploadRequest request)
         {
-            Console.WriteLine($"[INFO] Вызван метод UpdateAvatar для пользователя с ID: {id}");
-
-            if (string.IsNullOrEmpty(request.PhotoBase64))
-            {
-                Console.WriteLine("[ERROR] Base64 строка пуста.");
-                return BadRequest("Base64 строка не может быть пустой.");
-            }
-
             var user = await _context.Users.FindAsync(id);
+
             if (user == null)
             {
-                Console.WriteLine($"[ERROR] Пользователь с ID {id} не найден.");
-                return NotFound("Пользователь не найден.");
+                return NotFound(new { message = "User not found." });
             }
 
             user.PhotoBase64 = request.PhotoBase64;
+            _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
-            Console.WriteLine($"[INFO] Аватарка пользователя с ID {id} обновлена.");
-            return Ok(new { Message = "Аватарка успешно обновлена." });
+            return Ok(new { message = "Avatar updated successfully." });
+        }
+    }
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ServicesController : ControllerBase
+    {
+        private readonly AppDbContext _context;
+
+        public ServicesController(AppDbContext context)
+        {
+            _context = context;
         }
 
-
-        public class PhotoUploadRequest
+        [HttpPost("add")]
+        public async Task<IActionResult> AddService([FromBody] ServiceModel service)
         {
-            public string PhotoBase64 { get; set; }
-        }
-
-
-        [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(User user)
-        {
-            _context.Users.Add(user);
+            _context.Services.Add(service);
             await _context.SaveChangesAsync();
-            return Ok(user);
+            return Ok(new { message = "Service added successfully." });
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateService(int id, [FromBody] Service updatedService)
         {
-            if (string.IsNullOrWhiteSpace(loginDto.Login) || string.IsNullOrWhiteSpace(loginDto.Password))
-            {
-                return BadRequest("Логин и пароль обязательны.");
-            }
+            var service = await _context.Services.FindAsync(id);
+            if (service == null) return NotFound(new { message = "Service not found." });
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => (u.Username == loginDto.Login || u.Email == loginDto.Login)
-                                          && u.Password == loginDto.Password);
+            service.Name = updatedService.Name ?? service.Name;
+            service.Description = updatedService.Description ?? service.Description;
+            service.Price = updatedService.Price != 0 ? updatedService.Price : service.Price;
 
-            if (user == null)
-            {
-                return Unauthorized("Неверный логин или пароль.");
-            }
+            _context.Services.Update(service);
+            await _context.SaveChangesAsync();
 
-            var response = new
-            {
-                user.Id,
-                user.Username,
-                user.Email,
-                user.PhotoBase64,
-                user.Role
-            };
+            return Ok(new { message = "Service updated successfully." });
+        }
 
-            Console.WriteLine($"Ответ сервера: {System.Text.Json.JsonSerializer.Serialize(response)}");
-            return Ok(response);
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteService(int id)
+        {
+            var service = await _context.Services.FindAsync(id);
+            if (service == null) return NotFound(new { message = "Service not found." });
+
+            _context.Services.Remove(service);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Service deleted successfully." });
+        }
+
+        [HttpGet("specialist/{specialistId}")]
+        public async Task<IActionResult> GetServicesBySpecialist(int specialistId)
+        {
+            var services = await _context.Services.Where(s => s.SpecialistId == specialistId).ToListAsync();
+            return Ok(services);
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchServices(string query, string city)
+        {
+            var services = await _context.Services
+                .Where(s => EF.Functions.ILike(s.Name, $"%{query}%") && s.Specialist.City == city)
+                .Include(s => s.Specialist)
+                .ToListAsync();
+
+            return Ok(services);
         }
     }
-    public class LoginDto
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ChatController : ControllerBase
     {
-        public required string Login { get; set; } // Может быть Email или Username
-        public required string Password { get; set; }
+        private readonly AppDbContext _context;
+
+        public ChatController(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        [HttpPost("send")]
+        public async Task<IActionResult> SendMessage([FromBody] Message message)
+        {
+            _context.Messages.Add(message);
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "Message sent successfully." });
+        }
+
+        [HttpGet("conversation/{userId1}/{userId2}")]
+        public async Task<IActionResult> GetConversation(int userId1, int userId2)
+        {
+            var messages = await _context.Messages
+                .Where(m => (m.SenderId == userId1 && m.ReceiverId == userId2) ||
+                            (m.SenderId == userId2 && m.ReceiverId == userId1))
+                .OrderBy(m => m.Timestamp)
+                .ToListAsync();
+
+            return Ok(messages);
+        }
+        // Новый метод для удаления чата
+        [HttpDelete("delete/{userId1}/{userId2}")]
+        public async Task<IActionResult> DeleteChat(int userId1, int userId2)
+        {
+            var messages = _context.Messages
+                .Where(m => (m.SenderId == userId1 && m.ReceiverId == userId2) ||
+                            (m.SenderId == userId2 && m.ReceiverId == userId1));
+
+            if (!messages.Any())
+            {
+                return NotFound(new { message = "Chat not found." });
+            }
+
+            _context.Messages.RemoveRange(messages);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Chat deleted successfully." });
+        }
     }
-    public static class AvatarDefaults
+    [Route("api/[controller]")]
+    [ApiController]
+    public class FavoritesController : ControllerBase
     {
-        public static string DefaultAvatarBase64 => "data:image/png;base64,iVBORw0KGgoAAA...";
+        private readonly AppDbContext _context;
+
+        public FavoritesController(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        [HttpPost("add")]
+        public async Task<IActionResult> AddToFavorites([FromBody] Favorite favorite)
+        {
+            _context.Favorites.Add(favorite);
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "Added to favorites." });
+        }
+
+        [HttpDelete("remove/{id}")]
+        public async Task<IActionResult> RemoveFromFavorites(int id)
+        {
+            var favorite = await _context.Favorites.FindAsync(id);
+            if (favorite == null) return NotFound(new { message = "Favorite not found." });
+
+            _context.Favorites.Remove(favorite);
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "Removed from favorites." });
+        }
+
+        [HttpGet("client/{clientId}")]
+        public async Task<IActionResult> GetFavoritesByClient(int clientId)
+        {
+            var favorites = await _context.Favorites
+                .Where(f => f.ClientId == clientId)
+                .Include(f => f.Service)
+                .ToListAsync();
+
+            return Ok(favorites);
+        }
     }
 
+    public class PhotoUploadRequest
+    {
+        public string PhotoBase64 { get; set; }
+    }
+
+    public class PasswordResetRequestModel
+    {
+        public string Email { get; set; }
+    }
+
+    public class PasswordResetModel
+    {
+        public string NewPassword { get; set; }
+    }
+
+    public class LoginRequestModel
+    {
+        public string Login { get; set; }
+        public string Password { get; set; }
+    }
+
+    public class EmailRequest
+    {
+        public string To { get; set; }
+        public string Subject { get; set; }
+        public string Body { get; set; }
+    }
+
+    public class Service
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }
+        public int SpecialistId { get; set; }
+    }
 }
