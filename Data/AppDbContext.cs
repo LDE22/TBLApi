@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TBLApi.Controllers;
 using TBLApi.Models;
 
 namespace TBLApi.Data

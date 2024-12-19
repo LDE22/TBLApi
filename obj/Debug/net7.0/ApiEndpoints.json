@@ -23,7 +23,7 @@
   {
     "ContainingType": "TBLApi.Controllers.ChatController",
     "Method": "DeleteChat",
-    "RelativePath": "api/Chat/delete/{userId1}/{userId2}",
+    "RelativePath": "api/Chat/delete-chat/{userId1}/{userId2}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -214,6 +214,16 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.UsersController",
+    "Method": "GetAllUsers",
+    "RelativePath": "api/Users/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "TBLApi.Controllers.UsersController",

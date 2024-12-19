@@ -70,7 +70,7 @@
         }
       }
     },
-    "/api/Chat/delete/{userId1}/{userId2}": {
+    "/api/Chat/delete-chat/{userId1}/{userId2}": {
       "delete": {
         "tags": [
           "Chat"
@@ -598,6 +598,18 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Users/all": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
         "responses": {
           "200": {
             "description": "Success"

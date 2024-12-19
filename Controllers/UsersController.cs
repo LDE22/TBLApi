@@ -154,6 +154,12 @@ namespace TBLApi.Controllers
 
             return Ok(new { message = "Avatar updated successfully." });
         }
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _context.Users.ToListAsync();
+            return Ok(users);
+        }
     }
     [Route("api/[controller]")]
     [ApiController]
@@ -251,7 +257,7 @@ namespace TBLApi.Controllers
             return Ok(messages);
         }
         // Новый метод для удаления чата
-        [HttpDelete("delete/{userId1}/{userId2}")]
+        [HttpDelete("delete-chat/{userId1}/{userId2}")]
         public async Task<IActionResult> DeleteChat(int userId1, int userId2)
         {
             var messages = _context.Messages
