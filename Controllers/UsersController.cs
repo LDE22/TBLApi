@@ -93,7 +93,7 @@ namespace TBLApi.Controllers
                 return Unauthorized(new { message = "Подтвердите вашу почту" });
             }
 
-            return Ok(new { user.Id, user.Username, user.Email, user.Role, user.IsEmailConfirmed });
+            return Ok(new { user.Id, user.Username, user.Email, user.Role, user.Description, user.City, user.IsEmailConfirmed, user.PhotoBase64});
         }
 
         [HttpPost("send-password-reset")]
