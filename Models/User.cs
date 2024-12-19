@@ -14,7 +14,7 @@ namespace TBLApi.Models
         public string? City { get; set; } = "Город";
         public string Role { get; set; }
         public string? Description { get; set; }
-        public bool IsEmailConfirmed { get; set; }=false;
+        public bool IsEmailConfirmed { get; set; }
         public string? EmailConfirmationToken { get; set; }
         public string? PasswordResetToken { get; set; }
         public DateTime? PasswordResetExpiration { get; set; }

@@ -90,10 +90,10 @@ namespace TBLApi.Controllers
 
             if (!user.IsEmailConfirmed)
             {
-                return Unauthorized(new { message = "Please confirm your email to log in." });
+                return Unauthorized(new { message = "Подтвердите вашу почту" });
             }
 
-            return Ok(new { user.Id, user.Username, user.Email, user.Role });
+            return Ok(new { user.Id, user.Username, user.Email, user.Role, user.IsEmailConfirmed });
         }
 
         [HttpPost("send-password-reset")]
