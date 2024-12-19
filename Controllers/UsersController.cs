@@ -187,34 +187,23 @@ namespace TBLApi.Controllers
             return Ok(logs);
         }
         [HttpPut("update-profile/{id}")]
-        public async Task<IActionResult> UpdateProfile(int id, [FromBody] User updatedUser)
+        public async Task<IActionResult> UpdateProfile(int id, User model)
         {
             var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound(new { message = "User not found." });
-            }
+            if (user == null) return NotFound(new { message = "User not found" });
 
-            // Обновляем данные пользователя
-            user.Name = updatedUser.Name ?? user.Name;
-            user.City = updatedUser.City ?? user.City;
-            user.Description = updatedUser.Description ?? user.Description;
-
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
-
-            // Обновление города у всех услуг специалиста
-            var services = _context.Services.Where(s => s.SpecialistId == user.Id);
-            foreach (var service in services)
-            {
-                service.City = user.City; // Устанавливаем новый город
-            }
+            // Обновляем только те поля, которые были переданы
+            if (!string.IsNullOrEmpty(model.Username)) user.Username = model.Username;
+            if (!string.IsNullOrEmpty(model.Password)) user.Password = model.Password;
+            if (!string.IsNullOrEmpty(model.Email)) user.Email = model.Email;
+            if (!string.IsNullOrEmpty(model.Role)) user.Role = model.Role;
+            user.Name = model.Name;
+            user.City = model.City;
+            user.Description = model.Description;
 
             await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Profile updated successfully." });
+            return Ok(user);
         }
-
     }
     [Route("api/[controller]")]
     [ApiController]

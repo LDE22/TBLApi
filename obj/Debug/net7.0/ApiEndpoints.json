@@ -387,7 +387,7 @@
         "IsRequired": true
       },
       {
-        "Name": "updatedUser",
+        "Name": "model",
         "Type": "TBLApi.Models.User",
         "IsRequired": true
       }
