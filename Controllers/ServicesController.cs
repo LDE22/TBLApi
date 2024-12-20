@@ -47,18 +47,6 @@ public class ServicesController : ControllerBase
 
         return Ok(new { message = "Service updated successfully." });
     }
-    [HttpGet("{specialistId}")]
-    public async Task<IActionResult> GetSchedule(int specialistId)
-    {
-        var schedule = await _context.Schedules
-            .Where(s => s.SpecialistId == specialistId)
-            .ToListAsync();
-
-        if (!schedule.Any())
-            return NotFound(new { message = "График не найден." });
-
-        return Ok(schedule);
-    }
     [HttpPut("update/{id}")]
     public async Task<IActionResult> UpdateSchedule(int id, [FromBody] Schedule updatedSchedule)
     {

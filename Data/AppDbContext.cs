@@ -27,6 +27,10 @@ namespace TBLApi.Data
                 .WithMany()
                 .HasForeignKey(m => m.SenderId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+        .Property(u => u.PasswordResetToken)
+        .HasMaxLength(256); // Установите разумное ограничение для длины токена
         }
 
     }

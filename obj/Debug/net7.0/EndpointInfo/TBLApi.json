@@ -369,29 +369,6 @@
         }
       }
     },
-    "/api/Services/{specialistId}": {
-      "get": {
-        "tags": [
-          "Services"
-        ],
-        "parameters": [
-          {
-            "name": "specialistId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/Services/update/{id}": {
       "put": {
         "tags": [
@@ -749,7 +726,7 @@
         }
       }
     },
-    "/api/Users/update-password": {
+    "/api/Users/reset-password": {
       "post": {
         "tags": [
           "Users"
@@ -758,17 +735,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdatePasswordRequest"
+                "$ref": "#/components/schemas/ResetPasswordDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdatePasswordRequest"
+                "$ref": "#/components/schemas/ResetPasswordDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdatePasswordRequest"
+                "$ref": "#/components/schemas/ResetPasswordDto"
               }
             }
           }
@@ -1090,6 +1067,20 @@
         },
         "additionalProperties": false
       },
+      "ResetPasswordDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "nullable": true
+          },
+          "newPassword": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Schedule": {
         "type": "object",
         "properties": {
@@ -1176,20 +1167,6 @@
             "nullable": true
           },
           "description": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdatePasswordRequest": {
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string",
-            "nullable": true
-          },
-          "newPassword": {
             "type": "string",
             "nullable": true
           }

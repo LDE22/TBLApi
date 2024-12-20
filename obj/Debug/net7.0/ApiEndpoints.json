@@ -176,22 +176,6 @@
   },
   {
     "ContainingType": "ServicesController",
-    "Method": "GetSchedule",
-    "RelativePath": "api/Services/{specialistId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "specialistId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ServicesController",
     "Method": "AddService",
     "RelativePath": "api/Services/add",
     "HttpMethod": "POST",
@@ -446,6 +430,22 @@
   {
     "ContainingType": "TBLApi.Controllers.UsersController",
     "Method": "ResetPassword",
+    "RelativePath": "api/Users/reset-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "TBLApi.Controllers.ResetPasswordDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.UsersController",
+    "Method": "ResetPassword",
     "RelativePath": "api/Users/reset-password/{token}",
     "HttpMethod": "GET",
     "IsController": true,
@@ -507,22 +507,6 @@
       {
         "Name": "request",
         "Type": "TBLApi.Controllers.PhotoUploadRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TBLApi.Controllers.UsersController",
-    "Method": "UpdatePassword",
-    "RelativePath": "api/Users/update-password",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "TBLApi.Controllers.UpdatePasswordRequest",
         "IsRequired": true
       }
     ],

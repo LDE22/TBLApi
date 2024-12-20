@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using BCrypt.Net;
 using Microsoft.AspNetCore.Identity;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace TBLApi.Controllers
 {
@@ -118,21 +119,27 @@ namespace TBLApi.Controllers
 
             return Ok(new { message = "Password reset email sent." });
         }
-        [HttpPost("update-password")]
-        public async Task<IActionResult> UpdatePassword(UpdatePasswordRequest request)
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == request.Token);
-            if (user == null) return NotFound(new { message = "Неверный токен." });
+            // Проверяем пользователя с указанным токеном
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.PasswordResetToken == model.Token && u.PasswordResetExpiration > DateTime.UtcNow);
 
-            // Используем PasswordHasher для хэширования пароля
+            if (user == null)
+            {
+                return BadRequest(new { message = "Неверный или истёкший токен." });
+            }
+
+            // Обновляем пароль
             var passwordHasher = new PasswordHasher<User>();
-            user.Password = passwordHasher.HashPassword(user, request.NewPassword);
+            user.Password = passwordHasher.HashPassword(user, model.NewPassword); // Передаем пользователя и пароль
             user.PasswordResetToken = null; // Удаляем токен после использования
+            user.PasswordResetExpiration = null;
 
-            _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Пароль успешно обновлён." });
+            return Ok(new { message = "Пароль успешно сброшен." });
         }
 
         [HttpGet("reset-password/{token}")]
@@ -231,6 +238,12 @@ public async Task<IActionResult> GetUserById(int id)
             return Ok(new { message = "Profile updated successfully", user });
         }
     }
+    public class ResetPasswordDto
+{
+    public string Token { get; set; }
+    public string NewPassword { get; set; }
+}
+
     public class PhotoUploadRequest
     {
         public string PhotoBase64 { get; set; }
