@@ -302,17 +302,22 @@ public async Task<IActionResult> GetUserById(int id)
         [HttpGet("search")]
         public async Task<IActionResult> SearchServices(string query, string city)
         {
+            Console.WriteLine($"Поиск: query='{query}', city='{city}'");
+
             var services = await _context.Services
-                .Where(s => EF.Functions.ILike(s.SpecialistName, $"%{query}%") && s.City == city)
+                .Where(s => EF.Functions.ILike(s.Title, $"%{query}%") && s.City == city)
                 .ToListAsync();
 
             if (!services.Any())
             {
+                Console.WriteLine("Услуги не найдены.");
                 return NotFound(new { message = "No services found in this city." });
             }
 
+            Console.WriteLine($"Найдено {services.Count} услуг.");
             return Ok(services);
         }
+
 
     }
     [Route("api/[controller]")]
