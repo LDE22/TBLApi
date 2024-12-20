@@ -3,13 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using TBLApi.Data;
 using TBLApi.Models;
 using TBLApi.Services;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using BCrypt.Net;
 using Microsoft.AspNetCore.Identity;
-using Org.BouncyCastle.Asn1.Ocsp;
+using Microsoft.Extensions.Logging;
 
 namespace TBLApi.Controllers
 {
@@ -19,11 +14,13 @@ namespace TBLApi.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IEmailSender _emailSender;
+        private readonly ILogger<UsersController> _logger;
 
-        public UsersController(AppDbContext context, IEmailSender emailSender)
+        public UsersController(AppDbContext context, IEmailSender emailSender, ILogger<UsersController> logger)
         {
             _context = context;
             _emailSender = emailSender;
+            _logger = logger;
         }
 
         [HttpPost("register")]
@@ -121,9 +118,12 @@ namespace TBLApi.Controllers
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model)
         {
+            _logger.LogInformation("Начат процесс сброса пароля.");
+
             // Проверяем, что токен и пароль были переданы
             if (string.IsNullOrWhiteSpace(model.Token) || string.IsNullOrWhiteSpace(model.NewPassword))
             {
+                _logger.LogWarning("Токен или новый пароль не были предоставлены.");
                 return BadRequest(new { message = "Токен и новый пароль обязательны." });
             }
 
@@ -133,19 +133,31 @@ namespace TBLApi.Controllers
 
             if (user == null)
             {
+                _logger.LogWarning("Неверный или истёкший токен для сброса пароля. Токен: {Token}", model.Token);
                 return BadRequest(new { message = "Неверный или истёкший токен." });
             }
 
-            // Хэшируем новый пароль и обновляем пользователя
-            var passwordHasher = new PasswordHasher<User>();
-            user.Password = passwordHasher.HashPassword(user, model.NewPassword);
-            user.PasswordResetToken = null; // Удаляем токен после использования
-            user.PasswordResetExpiration = null;
+            try
+            {
+                // Хэшируем новый пароль и обновляем пользователя
+                var passwordHasher = new PasswordHasher<User>();
+                user.Password = passwordHasher.HashPassword(user, model.NewPassword);
+                user.PasswordResetToken = null; // Удаляем токен после использования
+                user.PasswordResetExpiration = null;
 
-            // Сохраняем изменения
-            await _context.SaveChangesAsync();
+                _logger.LogInformation("Пароль для пользователя с ID {UserId} успешно обновлён.", user.Id);
 
-            return Ok(new { message = "Пароль успешно сброшен." });
+                // Сохраняем изменения
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Изменения сохранены в базе данных.");
+                return Ok(new { message = "Пароль успешно сброшен." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при сбросе пароля для пользователя с токеном: {Token}", model.Token);
+                return StatusCode(500, new { message = "Произошла ошибка при сбросе пароля. Пожалуйста, попробуйте позже." });
+            }
         }
 
         [HttpGet("reset-password/{token}")]

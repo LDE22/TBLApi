@@ -6,6 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Добавляем поддержку контроллеров
 builder.Services.AddControllers();
+builder.Services.AddControllers();
+builder.Services.AddLogging();
+
 // Настройка Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
