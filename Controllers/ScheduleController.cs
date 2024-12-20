@@ -20,21 +20,22 @@ namespace TBLApi.Controllers
         [HttpGet("{specialistId}")]
         public async Task<IActionResult> GetSchedule(int specialistId)
         {
-            var schedules = await _context.Schedules
+            var schedule = await _context.Schedules
                 .Where(s => s.SpecialistId == specialistId)
+                .Select(s => new
+                {
+                    s.Id,
+                    s.SpecialistId,
+                    s.Day,
+                    WorkingHours = s.WorkingHoursList,
+                    BookedIntervals = s.BookedIntervalsList
+                })
                 .ToListAsync();
 
-            if (!schedules.Any())
+            if (!schedule.Any())
                 return NotFound(new { message = "Schedule not found." });
 
-            // Преобразование JSON-полей
-            foreach (var schedule in schedules)
-            {
-                schedule.WorkingHoursList = schedule.WorkingHoursList;
-                schedule.BookedIntervalsList = schedule.BookedIntervalsList;
-            }
-
-            return Ok(schedules);
+            return Ok(schedule);
         }
 
 

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
 
 namespace TBLApi.Models
 {
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Text.Json;
+
 
     public class Schedule
     {
@@ -12,13 +13,17 @@ namespace TBLApi.Models
         public int SpecialistId { get; set; } // Foreign Key
         public DateTime Day { get; set; }
 
+        // Список рабочих часов в виде JSON
+        public string WorkingHours { get; set; } // Хранится как JSON
+        public string BookedIntervals { get; set; } // Хранится как JSON
+
+        // Помощники для работы с JSON
         [NotMapped]
         public List<string> WorkingHoursList
         {
             get => string.IsNullOrEmpty(WorkingHours) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(WorkingHours);
             set => WorkingHours = JsonSerializer.Serialize(value);
         }
-        public string WorkingHours { get; set; } // JSON string
 
         [NotMapped]
         public List<string> BookedIntervalsList
@@ -26,10 +31,7 @@ namespace TBLApi.Models
             get => string.IsNullOrEmpty(BookedIntervals) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(BookedIntervals);
             set => BookedIntervals = JsonSerializer.Serialize(value);
         }
-        public string BookedIntervals { get; set; } // JSON string
     }
-
-
 
     public class Booking
     {

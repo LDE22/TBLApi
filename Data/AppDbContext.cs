@@ -28,5 +28,6 @@ namespace TBLApi.Data
                 .HasForeignKey(m => m.SenderId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
+
     }
 }

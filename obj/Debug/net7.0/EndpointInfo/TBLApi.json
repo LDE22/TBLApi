@@ -1103,6 +1103,14 @@
             "type": "string",
             "format": "date-time"
           },
+          "workingHours": {
+            "type": "string",
+            "nullable": true
+          },
+          "bookedIntervals": {
+            "type": "string",
+            "nullable": true
+          },
           "workingHoursList": {
             "type": "array",
             "items": {
@@ -1110,19 +1118,11 @@
             },
             "nullable": true
           },
-          "workingHours": {
-            "type": "string",
-            "nullable": true
-          },
           "bookedIntervalsList": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "nullable": true
-          },
-          "bookedIntervals": {
-            "type": "string",
             "nullable": true
           }
         },
