@@ -77,16 +77,24 @@ public class ServicesController : ControllerBase
     [HttpPost("book")]
     public async Task<IActionResult> BookService([FromBody] Booking booking)
     {
+        // Попытка преобразовать строку в DateTime
+        if (!DateTime.TryParse(booking.Day, out var bookingDate))
+        {
+            return BadRequest(new { message = "Invalid date format." });
+        }
+
         var schedule = await _context.Schedules
-            .FirstOrDefaultAsync(s => s.SpecialistId == booking.SpecialistId && s.Day == booking.Day);
+            .FirstOrDefaultAsync(s => s.SpecialistId == booking.SpecialistId && s.Day == bookingDate);
 
         if (schedule == null)
-            return NotFound(new { message = "График не найден." });
+            return NotFound(new { message = "Schedule not found." });
 
-        if (schedule.BookedIntervals.Contains(booking.TimeInterval))
-            return BadRequest(new { message = "Выбранное время уже занято." });
+        // Проверка времени
+        if (schedule.BookedIntervalsList.Contains(booking.TimeInterval))
+            return BadRequest(new { message = "Time already booked." });
 
-        schedule.BookedIntervals.Add(booking.TimeInterval);
+        // Добавление записи
+        schedule.BookedIntervalsList.Add(booking.TimeInterval);
 
         var appointment = new Appointment
         {
@@ -101,7 +109,7 @@ public class ServicesController : ControllerBase
         _context.Schedules.Update(schedule);
         await _context.SaveChangesAsync();
 
-        return Ok(new { message = "Запись успешно добавлена." });
+        return Ok(new { message = "Booking successful." });
     }
 
     [HttpDelete("delete/{id}")]

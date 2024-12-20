@@ -1101,17 +1101,28 @@
           },
           "day": {
             "type": "string",
+            "format": "date-time"
+          },
+          "workingHoursList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           },
           "workingHours": {
             "type": "string",
             "nullable": true
           },
-          "bookedIntervals": {
+          "bookedIntervalsList": {
             "type": "array",
             "items": {
               "type": "string"
             },
+            "nullable": true
+          },
+          "bookedIntervals": {
+            "type": "string",
             "nullable": true
           }
         },
