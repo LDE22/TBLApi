@@ -895,7 +895,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "name": {
+          "title": {
             "type": "string",
             "nullable": true
           },
@@ -912,6 +912,10 @@
             "format": "int32"
           },
           "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "specialistName": {
             "type": "string",
             "nullable": true
           }

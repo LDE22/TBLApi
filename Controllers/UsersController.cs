@@ -258,7 +258,7 @@ public async Task<IActionResult> GetUserById(int id)
             var service = await _context.Services.FindAsync(id);
             if (service == null) return NotFound(new { message = "Service not found." });
 
-            service.Name = updatedService.Name ?? service.Name;
+            service.SpecialistName = updatedService.Name ?? service.SpecialistName;
             service.Description = updatedService.Description ?? service.Description;
             service.Price = updatedService.Price != 0 ? updatedService.Price : service.Price;
 
@@ -279,18 +279,22 @@ public async Task<IActionResult> GetUserById(int id)
 
             return Ok(new { message = "Service deleted successfully." });
         }
-
         [HttpGet("specialist/{specialistId}")]
         public async Task<IActionResult> GetServicesBySpecialist(int specialistId)
         {
             var services = await _context.Services
                 .Where(s => s.SpecialistId == specialistId)
+                .Select(s => new
+                {
+                    s.Id,
+                    s.Title,
+                    s.Description,
+                    s.Price,
+                    s.SpecialistId,
+                    City = _context.Users.FirstOrDefault(u => u.Id == s.SpecialistId).City,
+                    SpecialistName = _context.Users.FirstOrDefault(u => u.Id == s.SpecialistId).Username
+                })
                 .ToListAsync();
-
-            if (!services.Any())
-            {
-                return Ok(new { message = "Услуг нет." });
-            }
 
             return Ok(services);
         }
@@ -299,7 +303,7 @@ public async Task<IActionResult> GetUserById(int id)
         public async Task<IActionResult> SearchServices(string query, string city)
         {
             var services = await _context.Services
-                .Where(s => EF.Functions.ILike(s.Name, $"%{query}%") && s.City == city)
+                .Where(s => EF.Functions.ILike(s.SpecialistName, $"%{query}%") && s.City == city)
                 .ToListAsync();
 
             if (!services.Any())
