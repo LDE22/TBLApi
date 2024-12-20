@@ -8,6 +8,6 @@ namespace TBLApi.Models
         public int ClientId { get; set; }
         public int ServiceId { get; set; }
 
-        public Service Service { get; set; }
+        public ServiceModel Service { get; set; }
     }
 }
