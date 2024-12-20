@@ -447,18 +447,13 @@
     "ContainingType": "TBLApi.Controllers.UsersController",
     "Method": "ResetPassword",
     "RelativePath": "api/Users/reset-password/{token}",
-    "HttpMethod": "POST",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "token",
         "Type": "System.String",
-        "IsRequired": true
-      },
-      {
-        "Name": "model",
-        "Type": "TBLApi.Controllers.PasswordResetModel",
         "IsRequired": true
       }
     ],
@@ -512,6 +507,22 @@
       {
         "Name": "request",
         "Type": "TBLApi.Controllers.PhotoUploadRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.UsersController",
+    "Method": "UpdatePassword",
+    "RelativePath": "api/Users/update-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TBLApi.Controllers.UpdatePasswordRequest",
         "IsRequired": true
       }
     ],

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using BCrypt.Net;
+using Microsoft.AspNetCore.Identity;
 
 namespace TBLApi.Controllers
 {
@@ -117,26 +118,33 @@ namespace TBLApi.Controllers
 
             return Ok(new { message = "Password reset email sent." });
         }
-
-        [HttpPost("reset-password/{token}")]
-        public async Task<IActionResult> ResetPassword(string token, [FromBody] PasswordResetModel model)
+        [HttpPost("update-password")]
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordRequest request)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == token && u.PasswordResetExpiration > DateTime.UtcNow);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == request.Token);
+            if (user == null) return NotFound(new { message = "Неверный токен." });
 
-            if (user == null)
-            {
-                return BadRequest(new { message = "Invalid or expired token." });
-            }
-
-            user.Password = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
-            user.PasswordResetToken = null;
-            user.PasswordResetExpiration = null;
+            // Используем PasswordHasher для хэширования пароля
+            var passwordHasher = new PasswordHasher<User>();
+            user.Password = passwordHasher.HashPassword(user, request.NewPassword);
+            user.PasswordResetToken = null; // Удаляем токен после использования
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Password reset successfully." });
+            return Ok(new { message = "Пароль успешно обновлён." });
         }
+
+        [HttpGet("reset-password/{token}")]
+        public IActionResult ResetPassword(string token)
+        {
+            // Генерация ссылки для приложения
+            var deepLinkUrl = $"myapp://reset-password?token={token}";
+
+            // Перенаправляем пользователя в приложение
+            return Redirect(deepLinkUrl);
+        }
+
 
         [HttpPut("update-avatar/{id}")]
         public async Task<IActionResult> UpdateAvatar(int id, [FromBody] PhotoUploadRequest request)
@@ -249,5 +257,10 @@ public async Task<IActionResult> GetUserById(int id)
         public string To { get; set; }
         public string Subject { get; set; }
         public string Body { get; set; }
+    }
+    public class UpdatePasswordRequest
+    {
+        public string Token { get; set; }
+        public string NewPassword { get; set; }
     }
 }
