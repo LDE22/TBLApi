@@ -102,10 +102,9 @@ namespace TBLApi.Controllers
         public async Task<IActionResult> SendPasswordReset([FromBody] PasswordResetRequestModel model)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
-
             if (user == null)
             {
-                return BadRequest(new { message = "Email not found." });
+                return NotFound(new { message = "No user found with the specified email." });
             }
 
             user.PasswordResetToken = Guid.NewGuid().ToString();
@@ -122,6 +121,12 @@ namespace TBLApi.Controllers
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model)
         {
+            // Проверяем, что токен и пароль были переданы
+            if (string.IsNullOrWhiteSpace(model.Token) || string.IsNullOrWhiteSpace(model.NewPassword))
+            {
+                return BadRequest(new { message = "Токен и новый пароль обязательны." });
+            }
+
             // Проверяем пользователя с указанным токеном
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.PasswordResetToken == model.Token && u.PasswordResetExpiration > DateTime.UtcNow);
@@ -131,12 +136,13 @@ namespace TBLApi.Controllers
                 return BadRequest(new { message = "Неверный или истёкший токен." });
             }
 
-            // Обновляем пароль
+            // Хэшируем новый пароль и обновляем пользователя
             var passwordHasher = new PasswordHasher<User>();
-            user.Password = passwordHasher.HashPassword(user, model.NewPassword); // Передаем пользователя и пароль
+            user.Password = passwordHasher.HashPassword(user, model.NewPassword);
             user.PasswordResetToken = null; // Удаляем токен после использования
             user.PasswordResetExpiration = null;
 
+            // Сохраняем изменения
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Пароль успешно сброшен." });
