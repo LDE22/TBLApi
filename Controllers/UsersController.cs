@@ -140,8 +140,7 @@ namespace TBLApi.Controllers
             try
             {
                 // Хэшируем новый пароль и обновляем пользователя
-                var passwordHasher = new PasswordHasher<User>();
-                user.Password = passwordHasher.HashPassword(user, model.NewPassword);
+                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
                 user.PasswordResetToken = null; // Удаляем токен после использования
                 user.PasswordResetExpiration = null;
 
