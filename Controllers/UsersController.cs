@@ -251,7 +251,22 @@ public async Task<IActionResult> GetUserById(int id)
 
             return Ok(new { message = "Profile updated successfully", user });
         }
+        [HttpGet("Specialists/{specialistId}")]
+        public async Task<IActionResult> GetSpecialistById(int specialistId)
+        {
+            var specialist = await _context.Users // Или другая таблица
+                .FirstOrDefaultAsync(u => u.Id == specialistId && u.Role == "Specialist");
+
+            if (specialist == null)
+            {
+                return NotFound(new { message = "Specialist not found." });
+            }
+
+            return Ok(specialist);
+        }
+
     }
+
     public class ResetPasswordDto
 {
     public string Token { get; set; }

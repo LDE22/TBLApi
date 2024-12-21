@@ -557,6 +557,22 @@
   },
   {
     "ContainingType": "TBLApi.Controllers.UsersController",
+    "Method": "GetSpecialistById",
+    "RelativePath": "api/Users/Specialists/{specialistId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "specialistId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.UsersController",
     "Method": "UpdateAvatar",
     "RelativePath": "api/Users/update-avatar/{id}",
     "HttpMethod": "PUT",
