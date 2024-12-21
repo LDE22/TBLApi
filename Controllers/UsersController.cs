@@ -120,14 +120,12 @@ namespace TBLApi.Controllers
         {
             _logger.LogInformation("Начат процесс сброса пароля.");
 
-            // Проверяем, что токен и пароль были переданы
             if (string.IsNullOrWhiteSpace(model.Token) || string.IsNullOrWhiteSpace(model.NewPassword))
             {
                 _logger.LogWarning("Токен или новый пароль не были предоставлены.");
                 return BadRequest(new { message = "Токен и новый пароль обязательны." });
             }
 
-            // Проверяем пользователя с указанным токеном
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.PasswordResetToken == model.Token && u.PasswordResetExpiration > DateTime.UtcNow);
 
@@ -139,14 +137,13 @@ namespace TBLApi.Controllers
 
             try
             {
-                // Хэшируем новый пароль и обновляем пользователя
-                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-                user.PasswordResetToken = null; // Удаляем токен после использования
+                // Хэшируем новый пароль
+                user.Password = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
+                user.PasswordResetToken = null;
                 user.PasswordResetExpiration = null;
 
                 _logger.LogInformation("Пароль для пользователя с ID {UserId} успешно обновлён.", user.Id);
 
-                // Сохраняем изменения
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Изменения сохранены в базе данных.");
