@@ -47,7 +47,6 @@ namespace TBLApi.Controllers
             return Ok(new { message = "Chat created successfully.", chat = initialMessage });
         }
 
-
         // Отправить сообщение
         [HttpPost("send")]
         public async Task<IActionResult> SendMessage([FromBody] Message message)
@@ -131,5 +130,4 @@ namespace TBLApi.Controllers
         public int SenderId { get; set; }
         public int ReceiverId { get; set; }
     }
-
 }

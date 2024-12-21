@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using TBLApi.Data;
 using TBLApi.Models;
 
@@ -15,14 +16,27 @@ namespace TBLApi.Controllers
         {
             _context = context;
         }
-
         [HttpPost("add")]
-        public async Task<IActionResult> AddToFavorites([FromBody] Favorite favorite)
+        public async Task<IActionResult> AddToFavorites([FromBody] AddFavoriteRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Логика добавления в избранное
+            var favorite = new Favorite
+            {
+                ClientId = request.ClientId,
+                ServiceId = request.ServiceId
+            };
+
             _context.Favorites.Add(favorite);
             await _context.SaveChangesAsync();
-            return Ok(new { message = "Added to favorites." });
+
+            return Ok(new { message = "Добавлено в избранное." });
         }
+
 
         [HttpDelete("remove/{id}")]
         public async Task<IActionResult> RemoveFromFavorites(int id)
@@ -46,4 +60,13 @@ namespace TBLApi.Controllers
             return Ok(favorites);
         }
     }
+    public class AddFavoriteRequest
+    {
+        [Required]
+        public int ClientId { get; set; }
+
+        [Required]
+        public int ServiceId { get; set; }
+    }
+
 }
