@@ -16,6 +16,7 @@ namespace TBLApi.Data
         public DbSet<Message> Messages { get; set; }
         public DbSet<ActionLog> ActionLogs { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -22,22 +22,15 @@ namespace TBLApi.Controllers
         {
             var schedule = await _context.Schedules
                 .Where(s => s.SpecialistId == specialistId)
-                .Select(s => new
-                {
-                    s.Id,
-                    s.SpecialistId,
-                    s.Day,
-                    WorkingHours = s.WorkingHoursList,
-                    BookedIntervals = s.BookedIntervalsList
-                })
                 .ToListAsync();
 
             if (!schedule.Any())
+            {
                 return NotFound(new { message = "Schedule not found." });
+            }
 
-            return Ok(schedule);
+            return Ok(new { data = schedule });
         }
-
 
         // Обновить график
         [HttpPut("update-schedule/{id}")]
@@ -45,9 +38,10 @@ namespace TBLApi.Controllers
         {
             var schedule = await _context.Schedules.FindAsync(id);
             if (schedule == null)
+            {
                 return NotFound(new { message = "Schedule not found." });
+            }
 
-            // Обновление данных
             schedule.WorkingHoursList = updatedSchedule.WorkingHoursList;
             schedule.BookedIntervalsList = updatedSchedule.BookedIntervalsList;
 
@@ -57,8 +51,7 @@ namespace TBLApi.Controllers
             return Ok(new { message = "Schedule updated successfully." });
         }
 
-
-        // Записать клиента на услугу
+        // Бронирование услуги
         [HttpPost("book")]
         public async Task<IActionResult> BookService([FromBody] Booking booking)
         {
@@ -66,13 +59,15 @@ namespace TBLApi.Controllers
                 .FirstOrDefaultAsync(s => s.SpecialistId == booking.SpecialistId && s.Day == DateTime.Parse(booking.Day));
 
             if (schedule == null)
+            {
                 return NotFound(new { message = "Schedule not found." });
+            }
 
-            // Проверка времени
             if (schedule.BookedIntervalsList.Contains(booking.TimeInterval))
+            {
                 return BadRequest(new { message = "Time already booked." });
+            }
 
-            // Добавление записи
             schedule.BookedIntervalsList.Add(booking.TimeInterval);
 
             var appointment = new Appointment
@@ -90,5 +85,47 @@ namespace TBLApi.Controllers
 
             return Ok(new { message = "Booking successful." });
         }
+
+        [HttpDelete("delete-booking/{id}")]
+        public async Task<IActionResult> DeleteBooking(int id)
+        {
+            var booking = await _context.Appointments.FindAsync(id);
+            if (booking == null)
+            {
+                return NotFound(new { message = "Booking not found." });
+            }
+
+            _context.Appointments.Remove(booking);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Booking deleted successfully." });
+        }
+
+
+        [HttpGet("appointments/{specialistId}")]
+        public async Task<IActionResult> GetAppointments(int specialistId)
+        {
+            var appointments = await _context.Appointments
+                .Where(a => a.SpecialistId == specialistId)
+                .Select(a => new
+                {
+                    a.Id,
+                    a.ClientId,
+                    ClientName = _context.Users.FirstOrDefault(u => u.Id == a.ClientId).Username,
+                    a.ServiceId,
+                    ServiceTitle = _context.Services.FirstOrDefault(s => s.Id == a.ServiceId).Title,
+                    a.Day,
+                    a.TimeInterval
+                })
+                .ToListAsync();
+
+            if (!appointments.Any())
+            {
+                return NotFound(new { message = "No appointments found." });
+            }
+
+            return Ok(new { data = appointments });
+        }
+
     }
 }

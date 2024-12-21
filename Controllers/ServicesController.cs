@@ -62,44 +62,7 @@ public class ServicesController : ControllerBase
 
         return Ok(new { message = "График обновлён." });
     }
-    [HttpPost("book")]
-    public async Task<IActionResult> BookService([FromBody] Booking booking)
-    {
-        // Попытка преобразовать строку в DateTime
-        if (!DateTime.TryParse(booking.Day, out var bookingDate))
-        {
-            return BadRequest(new { message = "Invalid date format." });
-        }
-
-        var schedule = await _context.Schedules
-            .FirstOrDefaultAsync(s => s.SpecialistId == booking.SpecialistId && s.Day == bookingDate);
-
-        if (schedule == null)
-            return NotFound(new { message = "Schedule not found." });
-
-        // Проверка времени
-        if (schedule.BookedIntervalsList.Contains(booking.TimeInterval))
-            return BadRequest(new { message = "Time already booked." });
-
-        // Добавление записи
-        schedule.BookedIntervalsList.Add(booking.TimeInterval);
-
-        var appointment = new Appointment
-        {
-            SpecialistId = booking.SpecialistId,
-            ClientId = booking.ClientId,
-            ServiceId = booking.ServiceId,
-            Day = booking.Day,
-            TimeInterval = booking.TimeInterval
-        };
-
-        _context.Appointments.Add(appointment);
-        _context.Schedules.Update(schedule);
-        await _context.SaveChangesAsync();
-
-        return Ok(new { message = "Booking successful." });
-    }
-
+ 
     [HttpDelete("delete/{id}")]
     public async Task<IActionResult> DeleteService(int id)
     {
@@ -111,24 +74,20 @@ public class ServicesController : ControllerBase
 
         return Ok(new { message = "Service deleted successfully." });
     }
+    // Получить услуги специалиста
     [HttpGet("specialist/{specialistId}")]
     public async Task<IActionResult> GetServicesBySpecialist(int specialistId)
     {
         var services = await _context.Services
             .Where(s => s.SpecialistId == specialistId)
-            .Select(s => new
-            {
-                s.Id,
-                s.Title,
-                s.Description,
-                s.Price,
-                s.SpecialistId,
-                City = _context.Users.FirstOrDefault(u => u.Id == s.SpecialistId).City,
-                SpecialistName = _context.Users.FirstOrDefault(u => u.Id == s.SpecialistId).Username
-            })
             .ToListAsync();
 
-        return Ok(services);
+        if (!services.Any())
+        {
+            return NotFound(new { message = "No services found for this specialist." });
+        }
+
+        return Ok(new { data = services });
     }
 
     [HttpGet("search")]
