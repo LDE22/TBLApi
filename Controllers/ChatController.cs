@@ -98,8 +98,15 @@ namespace TBLApi.Controllers
         [HttpPost("send-message")]
         public async Task<IActionResult> SendMessage([FromBody] Message message)
         {
+            if (message.ChatId == 0)
+            {
+                return BadRequest(new { message = "ChatId is required." });
+            }
+
+            // Сохраняем сообщение
             _context.Messages.Add(message);
 
+            // Обновляем "LastMessage" и "Timestamp" в чате
             var chat = await _context.Chats.FindAsync(message.ChatId);
             if (chat != null)
             {
