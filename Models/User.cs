@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace TBLApi.Models
 {
@@ -20,7 +21,10 @@ namespace TBLApi.Models
         public DateTime? PasswordResetExpiration { get; set; }
         public static string GetDefaultAvatarBase64() => DefaultAvatarBase64;
 
-        public List<Review> Reviews { get; set; } = new List<Review>();
+        [Required] // Указывает, что поле обязательно
+        public List<Review> Reviews { get; set; } = new List<Review>(); // Инициализировано пустым списком
+
+        [Required]
         public List<Favorite> Favorites { get; set; } = new List<Favorite>();
     }
 }

@@ -1239,6 +1239,10 @@
         "additionalProperties": false
       },
       "ServiceModel": {
+        "required": [
+          "favorites",
+          "reviews"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1273,15 +1277,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Review"
-            },
-            "nullable": true
+            }
           },
           "favorites": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Favorite"
-            },
-            "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1339,6 +1341,10 @@
         "additionalProperties": false
       },
       "User": {
+        "required": [
+          "favorites",
+          "reviews"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1401,15 +1407,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Review"
-            },
-            "nullable": true
+            }
           },
           "favorites": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Favorite"
-            },
-            "nullable": true
+            }
           }
         },
         "additionalProperties": false
