@@ -34,25 +34,6 @@ namespace TBLApi.Data
                 .HasForeignKey(r => r.SpecialistId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Настройки для Message
-            modelBuilder.Entity<Message>()
-                .HasOne(m => m.Chat)
-                .WithMany()
-                .HasForeignKey(m => m.ChatId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Message>()
-                .HasOne(m => m.Sender)
-                .WithMany()
-                .HasForeignKey(m => m.SenderId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Message>()
-                .HasOne(m => m.Receiver)
-                .WithMany()
-                .HasForeignKey(m => m.ReceiverId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             // Настройки для Chat
             modelBuilder.Entity<Chat>()
                 .HasOne(c => c.Sender)

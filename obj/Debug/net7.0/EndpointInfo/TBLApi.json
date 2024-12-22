@@ -987,38 +987,6 @@
   },
   "components": {
     "schemas": {
-      "Chat": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "senderId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "receiverId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "lastMessage": {
-            "type": "string",
-            "nullable": true
-          },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "sender": {
-            "$ref": "#/components/schemas/User"
-          },
-          "receiver": {
-            "$ref": "#/components/schemas/User"
-          }
-        },
-        "additionalProperties": false
-      },
       "CreateChatRequest": {
         "type": "object",
         "properties": {
@@ -1119,15 +1087,6 @@
           "timestamp": {
             "type": "string",
             "format": "date-time"
-          },
-          "chat": {
-            "$ref": "#/components/schemas/Chat"
-          },
-          "sender": {
-            "$ref": "#/components/schemas/User"
-          },
-          "receiver": {
-            "$ref": "#/components/schemas/User"
           }
         },
         "additionalProperties": false
