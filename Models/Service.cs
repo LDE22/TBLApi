@@ -9,5 +9,8 @@
         public int SpecialistId { get; set; }
         public string City { get; set; } // Добавлено
         public string SpecialistName { get; set; } // Добавлено
+
+        public ICollection<Favorite> Favorites { get; set; }
+        public ICollection<Review> Reviews { get; set; }
     }
 }

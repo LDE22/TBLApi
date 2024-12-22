@@ -5,10 +5,10 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/Chat/create": {
+    "/api/Chats/create": {
       "post": {
         "tags": [
-          "Chat"
+          "Chats"
         ],
         "requestBody": {
           "content": {
@@ -36,86 +36,14 @@
         }
       }
     },
-    "/api/Chat/send": {
-      "post": {
-        "tags": [
-          "Chat"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Message"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Message"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Message"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Chat/conversation/{userId1}/{userId2}": {
-      "get": {
-        "tags": [
-          "Chat"
-        ],
-        "parameters": [
-          {
-            "name": "userId1",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "userId2",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Chat/delete-chat/{userId1}/{userId2}": {
+    "/api/Chats/{chatId}": {
       "delete": {
         "tags": [
-          "Chat"
+          "Chats"
         ],
         "parameters": [
           {
-            "name": "userId1",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "userId2",
+            "name": "chatId",
             "in": "path",
             "required": true,
             "schema": {
@@ -131,10 +59,10 @@
         }
       }
     },
-    "/api/Chat/chats/{userId}": {
+    "/api/Chats/{userId}": {
       "get": {
         "tags": [
-          "Chat"
+          "Chats"
         ],
         "parameters": [
           {
@@ -154,7 +82,84 @@
         }
       }
     },
-    "/api/Favorites/add": {
+    "/api/Chats/messages/{chatId}": {
+      "get": {
+        "tags": [
+          "Chats"
+        ],
+        "parameters": [
+          {
+            "name": "chatId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Chats/send-message": {
+      "post": {
+        "tags": [
+          "Chats"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Message"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Message"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Message"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Favorites/{clientId}": {
+      "get": {
+        "tags": [
+          "Favorites"
+        ],
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Favorites": {
       "post": {
         "tags": [
           "Favorites"
@@ -185,7 +190,7 @@
         }
       }
     },
-    "/api/Favorites/remove/{id}": {
+    "/api/Favorites/{id}": {
       "delete": {
         "tags": [
           "Favorites"
@@ -193,29 +198,6 @@
         "parameters": [
           {
             "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Favorites/client/{clientId}": {
-      "get": {
-        "tags": [
-          "Favorites"
-        ],
-        "parameters": [
-          {
-            "name": "clientId",
             "in": "path",
             "required": true,
             "schema": {
@@ -343,83 +325,6 @@
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Schedule/book": {
-      "post": {
-        "tags": [
-          "Schedule"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Booking"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Booking"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Booking"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Schedule/delete-booking/{id}": {
-      "delete": {
-        "tags": [
-          "Schedule"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Schedule/appointments/{specialistId}": {
-      "get": {
-        "tags": [
-          "Schedule"
-        ],
-        "parameters": [
-          {
-            "name": "specialistId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -1059,28 +964,34 @@
   },
   "components": {
     "schemas": {
-      "Booking": {
+      "Chat": {
         "type": "object",
         "properties": {
-          "specialistId": {
+          "id": {
             "type": "integer",
             "format": "int32"
           },
-          "clientId": {
+          "senderId": {
             "type": "integer",
             "format": "int32"
           },
-          "serviceId": {
+          "receiverId": {
             "type": "integer",
             "format": "int32"
           },
-          "day": {
+          "lastMessage": {
             "type": "string",
             "nullable": true
           },
-          "timeInterval": {
+          "timestamp": {
             "type": "string",
-            "nullable": true
+            "format": "date-time"
+          },
+          "sender": {
+            "$ref": "#/components/schemas/User"
+          },
+          "receiver": {
+            "$ref": "#/components/schemas/User"
           }
         },
         "additionalProperties": false
@@ -1132,6 +1043,9 @@
             "type": "integer",
             "format": "int32"
           },
+          "client": {
+            "$ref": "#/components/schemas/User"
+          },
           "service": {
             "$ref": "#/components/schemas/ServiceModel"
           }
@@ -1159,6 +1073,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "chatId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "senderId": {
             "type": "integer",
             "format": "int32"
@@ -1174,6 +1092,9 @@
           "timestamp": {
             "type": "string",
             "format": "date-time"
+          },
+          "chat": {
+            "$ref": "#/components/schemas/Chat"
           },
           "sender": {
             "$ref": "#/components/schemas/User"
@@ -1241,7 +1162,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "timestamp": {
+          "createdAt": {
             "type": "string",
             "format": "date-time"
           },
@@ -1267,7 +1188,7 @@
           },
           "day": {
             "type": "string",
-            "format": "date-time"
+            "nullable": true
           },
           "workingHours": {
             "type": "string",
@@ -1323,6 +1244,20 @@
           },
           "specialistName": {
             "type": "string",
+            "nullable": true
+          },
+          "favorites": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Favorite"
+            },
+            "nullable": true
+          },
+          "reviews": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Review"
+            },
             "nullable": true
           }
         },
@@ -1437,6 +1372,20 @@
           "passwordResetExpiration": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "favorites": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Favorite"
+            },
+            "nullable": true
+          },
+          "reviews": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Review"
+            },
             "nullable": true
           }
         },

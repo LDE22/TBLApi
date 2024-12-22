@@ -5,17 +5,19 @@ namespace TBLApi.Models
     public class Message
     {
         public int Id { get; set; }
+        public int ChatId { get; set; } // Идентификатор чата
+        public int SenderId { get; set; }
+        public int ReceiverId { get; set; }
+        public string Content { get; set; }
+        public DateTime Timestamp { get; set; }
 
-        [ForeignKey("Sender")]
-        public int SenderId { get; set; } // Внешний ключ на User
+        [ForeignKey(nameof(ChatId))]
+        public Chat Chat { get; set; }
 
-        [ForeignKey("Receiver")]
-        public int ReceiverId { get; set; } // Внешний ключ на User
+        [ForeignKey(nameof(SenderId))]
+        public User Sender { get; set; }
 
-        public string? Content { get; set; }
-        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
-
-        public User? Sender { get; set; } // Связь с отправителем
-        public User? Receiver { get; set; } // Связь с получателем
+        [ForeignKey(nameof(ReceiverId))]
+        public User Receiver { get; set; }
     }
 }

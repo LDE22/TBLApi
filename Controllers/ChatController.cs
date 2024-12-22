@@ -5,13 +5,13 @@ using TBLApi.Models;
 
 namespace TBLApi.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class ChatController : ControllerBase
+    [Route("api/[controller]")]
+    public class ChatsController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public ChatController(AppDbContext context)
+        public ChatsController(AppDbContext context)
         {
             _context = context;
         }
@@ -21,108 +21,92 @@ namespace TBLApi.Controllers
         {
             if (request.SenderId == request.ReceiverId)
             {
-                return BadRequest(new { message = "Cannot create chat with yourself." });
+                return BadRequest(new { message = "Cannot create a chat with yourself." });
             }
 
-            var existingChat = await _context.Messages
-                .AnyAsync(m => (m.SenderId == request.SenderId && m.ReceiverId == request.ReceiverId) ||
-                               (m.SenderId == request.ReceiverId && m.ReceiverId == request.SenderId));
+            var existingChat = await _context.Chats
+                .FirstOrDefaultAsync(c =>
+                    (c.SenderId == request.SenderId && c.ReceiverId == request.ReceiverId) ||
+                    (c.SenderId == request.ReceiverId && c.ReceiverId == request.SenderId));
 
-            if (existingChat)
+            if (existingChat != null)
             {
                 return BadRequest(new { message = "Chat already exists." });
             }
 
-            var initialMessage = new Message
+            var chat = new Chat
             {
                 SenderId = request.SenderId,
                 ReceiverId = request.ReceiverId,
-                Content = "Chat created",
+                LastMessage = "Chat started",
                 Timestamp = DateTime.UtcNow
             };
 
-            _context.Messages.Add(initialMessage);
+            _context.Chats.Add(chat);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Chat created successfully.", chat = initialMessage });
+            return Ok(new { message = "Chat created successfully.", chat });
         }
 
-        // Отправить сообщение
-        [HttpPost("send")]
-        public async Task<IActionResult> SendMessage([FromBody] Message message)
+        [HttpDelete("{chatId}")]
+        public async Task<IActionResult> DeleteChat(int chatId)
         {
-            if (message == null || string.IsNullOrWhiteSpace(message.Content))
-            {
-                return BadRequest(new { message = "Message content is required." });
-            }
-
-            _context.Messages.Add(message);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Message sent successfully.", data = message });
-        }
-
-        // Получить чат между двумя пользователями
-        [HttpGet("conversation/{userId1}/{userId2}")]
-        public async Task<IActionResult> GetConversation(int userId1, int userId2)
-        {
-            var messages = await _context.Messages
-                .Where(m => (m.SenderId == userId1 && m.ReceiverId == userId2) ||
-                            (m.SenderId == userId2 && m.ReceiverId == userId1))
-                .OrderBy(m => m.Timestamp)
-                .ToListAsync();
-
-            if (!messages.Any())
-            {
-                return NotFound(new { message = "No conversation found." });
-            }
-
-            return Ok(new { data = messages });
-        }
-
-        // Удалить чат
-        [HttpDelete("delete-chat/{userId1}/{userId2}")]
-        public async Task<IActionResult> DeleteChat(int userId1, int userId2)
-        {
-            var messages = await _context.Messages
-                .Where(m => (m.SenderId == userId1 && m.ReceiverId == userId2) ||
-                            (m.SenderId == userId2 && m.ReceiverId == userId1))
-                .ToListAsync();
-
-            if (!messages.Any())
+            var chat = await _context.Chats.FindAsync(chatId);
+            if (chat == null)
             {
                 return NotFound(new { message = "Chat not found." });
             }
 
+            // Удалить сообщения, связанные с чатом
+            var messages = _context.Messages.Where(m => m.ChatId == chatId);
             _context.Messages.RemoveRange(messages);
+
+            // Удалить сам чат
+            _context.Chats.Remove(chat);
+
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Chat deleted successfully." });
         }
 
-        // Получить список чатов пользователя
-        [HttpGet("chats/{userId}")]
+
+        [HttpGet("{userId}")]
         public async Task<IActionResult> GetChats(int userId)
         {
-            var chats = await _context.Messages
-                .Where(m => m.SenderId == userId || m.ReceiverId == userId)
-                .GroupBy(m => m.SenderId == userId ? m.ReceiverId : m.SenderId)
-                .Select(g => new ChatPreview
-                {
-                    ChatId = g.Key,
-                    Name = _context.Users.FirstOrDefault(u => u.Id == g.Key).Username,
-                    LastMessage = g.OrderByDescending(m => m.Timestamp).First().Content,
-                    Timestamp = g.Max(m => m.Timestamp),
-                    TargetUserId = g.Key
-                })
+            var chats = await _context.Chats
+                .Where(c => c.SenderId == userId || c.ReceiverId == userId)
+                .OrderByDescending(c => c.Timestamp)
                 .ToListAsync();
 
-            if (!chats.Any())
+            return Ok(chats);
+        }
+
+        [HttpGet("messages/{chatId}")]
+        public async Task<IActionResult> GetMessages(int chatId)
+        {
+            var messages = await _context.Messages
+                .Where(m => m.ChatId == chatId)
+                .OrderBy(m => m.Timestamp)
+                .ToListAsync();
+
+            return Ok(messages);
+        }
+
+        [HttpPost("send-message")]
+        public async Task<IActionResult> SendMessage([FromBody] Message message)
+        {
+            _context.Messages.Add(message);
+
+            var chat = await _context.Chats.FindAsync(message.ChatId);
+            if (chat != null)
             {
-                return NotFound(new { message = "No chats found." });
+                chat.LastMessage = message.Content;
+                chat.Timestamp = DateTime.UtcNow;
             }
 
-            return Ok(new { data = chats });
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
     public class CreateChatRequest
@@ -130,4 +114,5 @@ namespace TBLApi.Controllers
         public int SenderId { get; set; }
         public int ReceiverId { get; set; }
     }
+
 }

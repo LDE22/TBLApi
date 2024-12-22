@@ -1,8 +1,24 @@
 [
   {
-    "ContainingType": "TBLApi.Controllers.ChatController",
+    "ContainingType": "TBLApi.Controllers.ChatsController",
+    "Method": "DeleteChat",
+    "RelativePath": "api/Chats/{chatId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "chatId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.ChatsController",
     "Method": "GetChats",
-    "RelativePath": "api/Chat/chats/{userId}",
+    "RelativePath": "api/Chats/{userId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -16,30 +32,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "TBLApi.Controllers.ChatController",
-    "Method": "GetConversation",
-    "RelativePath": "api/Chat/conversation/{userId1}/{userId2}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId1",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "userId2",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TBLApi.Controllers.ChatController",
+    "ContainingType": "TBLApi.Controllers.ChatsController",
     "Method": "CreateChat",
-    "RelativePath": "api/Chat/create",
+    "RelativePath": "api/Chats/create",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -53,20 +48,15 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "TBLApi.Controllers.ChatController",
-    "Method": "DeleteChat",
-    "RelativePath": "api/Chat/delete-chat/{userId1}/{userId2}",
-    "HttpMethod": "DELETE",
+    "ContainingType": "TBLApi.Controllers.ChatsController",
+    "Method": "GetMessages",
+    "RelativePath": "api/Chats/messages/{chatId}",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "userId1",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "userId2",
+        "Name": "chatId",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -74,9 +64,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "TBLApi.Controllers.ChatController",
+    "ContainingType": "TBLApi.Controllers.ChatsController",
     "Method": "SendMessage",
-    "RelativePath": "api/Chat/send",
+    "RelativePath": "api/Chats/send-message",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -91,8 +81,8 @@
   },
   {
     "ContainingType": "TBLApi.Controllers.FavoritesController",
-    "Method": "AddToFavorites",
-    "RelativePath": "api/Favorites/add",
+    "Method": "AddToFavorite",
+    "RelativePath": "api/Favorites",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -107,8 +97,8 @@
   },
   {
     "ContainingType": "TBLApi.Controllers.FavoritesController",
-    "Method": "GetFavoritesByClient",
-    "RelativePath": "api/Favorites/client/{clientId}",
+    "Method": "GetFavorites",
+    "RelativePath": "api/Favorites/{clientId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -123,8 +113,8 @@
   },
   {
     "ContainingType": "TBLApi.Controllers.FavoritesController",
-    "Method": "RemoveFromFavorites",
-    "RelativePath": "api/Favorites/remove/{id}",
+    "Method": "RemoveFromFavorite",
+    "RelativePath": "api/Favorites/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -179,54 +169,6 @@
     "Parameters": [
       {
         "Name": "specialistId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TBLApi.Controllers.ScheduleController",
-    "Method": "GetAppointments",
-    "RelativePath": "api/Schedule/appointments/{specialistId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "specialistId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TBLApi.Controllers.ScheduleController",
-    "Method": "BookService",
-    "RelativePath": "api/Schedule/book",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "booking",
-        "Type": "TBLApi.Models.Booking",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TBLApi.Controllers.ScheduleController",
-    "Method": "DeleteBooking",
-    "RelativePath": "api/Schedule/delete-booking/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
       }
