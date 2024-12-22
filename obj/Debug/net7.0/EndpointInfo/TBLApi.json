@@ -290,7 +290,38 @@
         }
       }
     },
-    "/api/Schedule/update-schedule/{id}": {
+    "/api/Schedule": {
+      "post": {
+        "tags": [
+          "Schedule"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Schedule"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Schedule"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Schedule"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Schedule/{id}": {
       "put": {
         "tags": [
           "Schedule"
@@ -1170,7 +1201,7 @@
           },
           "day": {
             "type": "string",
-            "nullable": true
+            "format": "date-time"
           },
           "workingHours": {
             "type": "string",
