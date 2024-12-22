@@ -15,6 +15,18 @@ namespace TBLApi.Controllers
         {
             _context = context;
         }
+        [HttpPost]
+        public async Task<IActionResult> AddSchedule([FromBody] Schedule schedule)
+        {
+            if (schedule == null)
+            {
+                return BadRequest("Данные расписания отсутствуют");
+            }
+
+            _context.Schedules.Add(schedule);
+            await _context.SaveChangesAsync();
+            return Ok(schedule);
+        }
 
         // Получить график специалиста
         [HttpGet("{specialistId}")]
