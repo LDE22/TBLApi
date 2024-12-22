@@ -41,7 +41,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "TBLApi.Controllers.CreateChatRequest",
+        "Type": "TBLApi.Controllers.ChatsController\u002BCreateChatRequest",
         "IsRequired": true
       }
     ],

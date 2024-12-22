@@ -98,12 +98,12 @@ namespace TBLApi.Controllers
         [HttpPost("send-message")]
         public async Task<IActionResult> SendMessage([FromBody] Message message)
         {
-            if (message.ChatId == 0)
+            if (message == null || message.ChatId == 0 || string.IsNullOrWhiteSpace(message.Content))
             {
-                return BadRequest(new { message = "ChatId is required." });
+                return BadRequest(new { message = "Invalid message data." });
             }
 
-            // Сохраняем сообщение
+            // Добавляем сообщение
             _context.Messages.Add(message);
 
             // Обновляем "LastMessage" и "Timestamp" в чате
@@ -113,16 +113,21 @@ namespace TBLApi.Controllers
                 chat.LastMessage = message.Content;
                 chat.Timestamp = DateTime.UtcNow;
             }
+            else
+            {
+                return NotFound(new { message = "Chat not found." });
+            }
 
+            // Сохраняем изменения
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(new { message = "Message sent successfully." });
         }
-    }
-    public class CreateChatRequest
-    {
-        public int SenderId { get; set; }
-        public int ReceiverId { get; set; }
-    }
+        public class CreateChatRequest
+        {
+            public int SenderId { get; set; }
+            public int ReceiverId { get; set; }
+        }
 
+    }
 }
