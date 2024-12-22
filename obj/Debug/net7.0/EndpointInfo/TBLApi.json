@@ -159,7 +159,7 @@
         }
       }
     },
-    "/api/Favorites": {
+    "/api/Favorites/add": {
       "post": {
         "tags": [
           "Favorites"
@@ -1029,6 +1029,10 @@
         "additionalProperties": false
       },
       "Favorite": {
+        "required": [
+          "clientId",
+          "serviceId"
+        ],
         "type": "object",
         "properties": {
           "id": {

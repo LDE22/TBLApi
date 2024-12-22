@@ -81,22 +81,6 @@
   },
   {
     "ContainingType": "TBLApi.Controllers.FavoritesController",
-    "Method": "AddToFavorite",
-    "RelativePath": "api/Favorites",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "favorite",
-        "Type": "TBLApi.Models.Favorite",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TBLApi.Controllers.FavoritesController",
     "Method": "GetFavorites",
     "RelativePath": "api/Favorites/{clientId}",
     "HttpMethod": "GET",
@@ -122,6 +106,22 @@
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.FavoritesController",
+    "Method": "AddToFavorite",
+    "RelativePath": "api/Favorites/add",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "favorite",
+        "Type": "TBLApi.Models.Favorite",
         "IsRequired": true
       }
     ],

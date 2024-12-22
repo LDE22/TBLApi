@@ -29,6 +29,12 @@ namespace TBLApi.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> AddToFavorite([FromBody] Favorite favorite)
         {
+            // Проверьте, что ClientId и ServiceId присутствуют
+            if (favorite.ClientId <= 0 || favorite.ServiceId <= 0)
+            {
+                return BadRequest("ClientId и ServiceId должны быть указаны.");
+            }
+
             _context.Favorites.Add(favorite);
             await _context.SaveChangesAsync();
 

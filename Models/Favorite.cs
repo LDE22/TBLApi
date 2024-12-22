@@ -6,14 +6,16 @@ namespace TBLApi.Models
     public class Favorite
     {
         public int Id { get; set; }
+
+        [Required] // Поле ClientId обязательно
         public int ClientId { get; set; }
+
+        [Required] // Поле ServiceId обязательно
         public int ServiceId { get; set; }
 
-        // Связь с услугой
-        [ForeignKey(nameof(ClientId))]
-        public User Client { get; set; } // Связь с таблицей Users
-
-        [ForeignKey(nameof(ServiceId))]
-        public ServiceModel Service { get; set; } // Связь с таблицей Services
+        // Навигационные свойства. НЕ делайте их [Required], если вы отправляете только идентификаторы.
+        public User Client { get; set; } // Уберите [Required], если есть
+        public ServiceModel Service { get; set; } // Уберите [Required], если есть
     }
+
 }

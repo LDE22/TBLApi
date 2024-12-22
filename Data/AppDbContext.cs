@@ -65,6 +65,18 @@ namespace TBLApi.Data
                 .WithMany()
                 .HasForeignKey(c => c.ReceiverId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Favorite>()
+        .HasOne(f => f.Client)
+        .WithMany()
+        .HasForeignKey(f => f.ClientId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Favorite>()
+                .HasOne(f => f.Service)
+                .WithMany()
+                .HasForeignKey(f => f.ServiceId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
