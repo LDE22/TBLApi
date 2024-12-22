@@ -24,6 +24,7 @@ namespace TBLApi.Controllers
                 return BadRequest(new { message = "Cannot create a chat with yourself." });
             }
 
+            // Проверяем, существует ли уже чат
             var existingChat = await _context.Chats
                 .FirstOrDefaultAsync(c =>
                     (c.SenderId == request.SenderId && c.ReceiverId == request.ReceiverId) ||
@@ -31,9 +32,10 @@ namespace TBLApi.Controllers
 
             if (existingChat != null)
             {
-                return BadRequest(new { message = "Chat already exists." });
+                return Ok(existingChat); // Возвращаем существующий чат
             }
 
+            // Создаём новый чат
             var chat = new Chat
             {
                 SenderId = request.SenderId,
@@ -45,8 +47,9 @@ namespace TBLApi.Controllers
             _context.Chats.Add(chat);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Chat created successfully.", chat });
+            return Ok(chat);
         }
+
 
         [HttpDelete("{chatId}")]
         public async Task<IActionResult> DeleteChat(int chatId)
