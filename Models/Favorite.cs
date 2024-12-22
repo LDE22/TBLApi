@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace TBLApi.Models
 {
@@ -14,8 +15,11 @@ namespace TBLApi.Models
         public int ServiceId { get; set; }
 
         // Навигационные свойства. НЕ делайте их [Required], если вы отправляете только идентификаторы.
-        public User Client { get; set; } // Уберите [Required], если есть
-        public ServiceModel Service { get; set; } // Уберите [Required], если есть
+        [ForeignKey(nameof(ClientId))]
+        public User Client { get; set; }
+
+        [ForeignKey(nameof(ServiceId))]
+        public ServiceModel Service { get; set; }
     }
 
 }

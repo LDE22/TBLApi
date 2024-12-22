@@ -68,13 +68,13 @@ namespace TBLApi.Data
 
             modelBuilder.Entity<Favorite>()
         .HasOne(f => f.Client)
-        .WithMany()
+        .WithMany(c => c.Favorites)
         .HasForeignKey(f => f.ClientId)
         .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Favorite>()
                 .HasOne(f => f.Service)
-                .WithMany()
+                .WithMany(s => s.Favorites)
                 .HasForeignKey(f => f.ServiceId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

@@ -198,6 +198,22 @@
   },
   {
     "ContainingType": "ServicesController",
+    "Method": "GetServiceById",
+    "RelativePath": "api/Services/{serviceId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "serviceId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ServicesController",
     "Method": "AddService",
     "RelativePath": "api/Services/add",
     "HttpMethod": "POST",

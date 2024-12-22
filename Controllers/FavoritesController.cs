@@ -29,11 +29,23 @@ namespace TBLApi.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> AddToFavorite([FromBody] Favorite favorite)
         {
-            // Проверьте, что ClientId и ServiceId присутствуют
             if (favorite.ClientId <= 0 || favorite.ServiceId <= 0)
             {
-                return BadRequest("ClientId и ServiceId должны быть указаны.");
+                return BadRequest("ClientId and ServiceId are required.");
             }
+
+            // Проверка существования клиента и услуги
+            var existingClient = await _context.Users.FindAsync(favorite.ClientId);
+            var existingService = await _context.Services.FindAsync(favorite.ServiceId);
+
+            if (existingClient == null || existingService == null)
+            {
+                return NotFound("Client or Service not found.");
+            }
+
+            // Обнуляем навигационные свойства
+            favorite.Client = null;
+            favorite.Service = null;
 
             _context.Favorites.Add(favorite);
             await _context.SaveChangesAsync();
@@ -53,4 +65,10 @@ namespace TBLApi.Controllers
             return Ok();
         }
     }
+    public class FavoriteDto
+    {
+        public int ClientId { get; set; }
+        public int ServiceId { get; set; }
+    }
+
 }
