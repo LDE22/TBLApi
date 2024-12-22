@@ -90,6 +90,19 @@ public class ServicesController : ControllerBase
         return Ok(new { data = services });
     }
 
+    [HttpGet("{serviceId}")]
+    public async Task<IActionResult> GetServiceById(int serviceId)
+    {
+        var service = await _context.Services.FindAsync(serviceId);
+
+        if (service == null)
+        {
+            return NotFound(new { Message = $"Service with ID {serviceId} not found." });
+        }
+
+        return Ok(service);
+    }
+
     [HttpGet("search")]
     public async Task<IActionResult> SearchServices(string query, string city)
     {
