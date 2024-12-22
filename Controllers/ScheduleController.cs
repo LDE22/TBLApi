@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using TBLApi.Data;
 using TBLApi.Models;
 
@@ -34,19 +35,30 @@ namespace TBLApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddSchedule(Schedule schedule)
+        public async Task<IActionResult> AddSchedule([FromBody] Schedule schedule)
         {
+            if (schedule == null)
+            {
+                return BadRequest("Данные не могут быть пустыми.");
+            }
+
+            // Проверяем корректность JSON-форматов
             try
             {
-                _context.Schedules.Add(schedule);
-                await _context.SaveChangesAsync();
-                return Ok(schedule);
+                var workingHours = JsonSerializer.Deserialize<List<string>>(schedule.WorkingHours);
+                var bookedIntervals = JsonSerializer.Deserialize<List<string>>(schedule.BookedIntervals);
             }
-            catch (Exception ex)
+            catch (JsonException ex)
             {
-                return StatusCode(500, $"Ошибка при добавлении расписания: {ex.Message}");
+                return BadRequest($"Неверный формат JSON: {ex.Message}");
             }
+
+            _context.Schedules.Add(schedule);
+            await _context.SaveChangesAsync();
+
+            return Ok(schedule);
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSchedule(int id, Schedule updatedSchedule)
