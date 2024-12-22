@@ -11,13 +11,5 @@ namespace TBLApi.Models
         public string Content { get; set; }
         public DateTime Timestamp { get; set; }
 
-        [ForeignKey(nameof(ChatId))]
-        public Chat Chat { get; set; }
-
-        [ForeignKey(nameof(SenderId))]
-        public User Sender { get; set; }
-
-        [ForeignKey(nameof(ReceiverId))]
-        public User Receiver { get; set; }
     }
 }
