@@ -21,8 +21,9 @@ namespace TBLApi.Controllers
         public async Task<IActionResult> GetFavorites(int clientId)
         {
             var favorites = await _context.Favorites
-                .Where(f => f.ClientId == clientId)
-                .ToListAsync();
+        .Include(f => f.Service) // Подгружаем данные услуги
+        .Where(f => f.ClientId == clientId)
+        .ToListAsync();
 
             return Ok(favorites);
         }
