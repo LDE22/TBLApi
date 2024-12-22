@@ -11,6 +11,10 @@
       "RelativeMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|solutionrelative:models\\favorite.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|c:\\prodj\\tblapi\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|c:\\prodj\\tblapi\\controllers\\favoritescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|solutionrelative:controllers\\favoritescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -22,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -31,6 +35,19 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\PRODJ\\TBLApi\\Models\\User.cs",
+              "RelativeDocumentMoniker": "Models\\User.cs",
+              "ToolTip": "C:\\PRODJ\\TBLApi\\Models\\User.cs",
+              "RelativeToolTip": "Models\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-22T17:13:51.786Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -60,7 +77,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "FavoritesController.cs",
               "DocumentMoniker": "C:\\PRODJ\\TBLApi\\Controllers\\FavoritesController.cs",
               "RelativeDocumentMoniker": "Controllers\\FavoritesController.cs",
@@ -68,8 +85,7 @@
               "RelativeToolTip": "Controllers\\FavoritesController.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAABsAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-22T15:47:22.067Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-22T15:47:22.067Z"
             }
           ]
         }

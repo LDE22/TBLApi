@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using TBLApi.Data;
 using TBLApi.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Добавляем поддержку контроллеров
@@ -16,9 +17,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
         options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
     });
+
+
+
 
 
 // Чтение параметров SMTP из конфигурации
