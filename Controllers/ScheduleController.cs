@@ -84,5 +84,26 @@ namespace TBLApi.Controllers
                 return StatusCode(500, $"Ошибка при обновлении расписания: {ex.Message}");
             }
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteSchedule(int id)
+        {
+            try
+            {
+                var schedule = await _context.Schedules.FindAsync(id);
+                if (schedule == null)
+                {
+                    return NotFound("Расписание не найдено.");
+                }
+
+                _context.Schedules.Remove(schedule);
+                await _context.SaveChangesAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ошибка при удалении расписания: {ex.Message}");
+            }
+        }
     }
 }

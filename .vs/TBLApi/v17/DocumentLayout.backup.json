@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\PRODJ\\TBLApi\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|c:\\prodj\\tblapi\\models\\schedule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|solutionrelative:models\\schedule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|c:\\prodj\\tblapi\\controllers\\schedulecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|solutionrelative:controllers\\schedulecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|c:\\prodj\\tblapi\\models\\schedule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|solutionrelative:models\\schedule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -30,7 +30,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Schedule.cs",
               "DocumentMoniker": "C:\\PRODJ\\TBLApi\\Models\\Schedule.cs",
               "RelativeDocumentMoniker": "Models\\Schedule.cs",
@@ -38,20 +38,20 @@
               "RelativeToolTip": "Models\\Schedule.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-22T22:32:40.403Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-22T22:32:40.403Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "ScheduleController.cs",
               "DocumentMoniker": "C:\\PRODJ\\TBLApi\\Controllers\\ScheduleController.cs",
               "RelativeDocumentMoniker": "Controllers\\ScheduleController.cs",
               "ToolTip": "C:\\PRODJ\\TBLApi\\Controllers\\ScheduleController.cs",
               "RelativeToolTip": "Controllers\\ScheduleController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADAAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAABYAAAAAAAAAAAAYwDwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-22T22:25:36.09Z"
+              "WhenOpened": "2024-12-22T22:25:36.09Z",
+              "EditorCaption": ""
             }
           ]
         }
