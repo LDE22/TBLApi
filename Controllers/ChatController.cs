@@ -21,10 +21,9 @@ namespace TBLApi.Controllers
         {
             if (request.SenderId == request.ReceiverId)
             {
-                return BadRequest(new { message = "Cannot create a chat with yourself." });
+                return BadRequest(new { message = "Нельзя создать чат с самим собой." });
             }
 
-            // Проверяем, существует ли уже чат
             var existingChat = await _context.Chats
                 .FirstOrDefaultAsync(c =>
                     (c.SenderId == request.SenderId && c.ReceiverId == request.ReceiverId) ||
@@ -32,10 +31,9 @@ namespace TBLApi.Controllers
 
             if (existingChat != null)
             {
-                return Ok(existingChat); // Возвращаем существующий чат
+                return Ok(existingChat);
             }
 
-            // Создаём новый чат
             var chat = new Chat
             {
                 SenderId = request.SenderId,
@@ -49,7 +47,6 @@ namespace TBLApi.Controllers
 
             return Ok(chat);
         }
-
 
         [HttpDelete("{chatId}")]
         public async Task<IActionResult> DeleteChat(int chatId)
@@ -98,35 +95,23 @@ namespace TBLApi.Controllers
         [HttpPost("send-message")]
         public async Task<IActionResult> SendMessage([FromBody] Message message)
         {
-            if (message == null || message.ChatId == 0 || string.IsNullOrWhiteSpace(message.Content))
+            if (message == null || message.ChatId <= 0 || string.IsNullOrWhiteSpace(message.Content))
             {
                 return BadRequest(new { message = "Некорректные данные сообщения." });
             }
 
-            // Проверяем существование чата
+            _context.Messages.Add(message);
+
             var chat = await _context.Chats.FindAsync(message.ChatId);
-            if (chat == null)
+            if (chat != null)
             {
-                return NotFound(new { message = "Чат не найден." });
+                chat.LastMessage = message.Content;
+                chat.Timestamp = DateTime.UtcNow;
             }
-
-            // Добавляем сообщение в базу данных
-            _context.Messages.Add(new Message
-            {
-                ChatId = message.ChatId,
-                SenderId = message.SenderId,
-                ReceiverId = message.ReceiverId,
-                Content = message.Content,
-                Timestamp = DateTime.UtcNow
-            });
-
-            // Обновляем последний статус чата
-            chat.LastMessage = message.Content;
-            chat.Timestamp = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Сообщение успешно отправлено." });
+            return Ok();
         }
 
         public class CreateChatRequest
