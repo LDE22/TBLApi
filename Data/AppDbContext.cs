@@ -22,6 +22,18 @@ namespace TBLApi.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Review>()
+        .HasOne(r => r.Client)
+        .WithMany()
+        .HasForeignKey(r => r.ClientId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Specialist)
+                .WithMany()
+                .HasForeignKey(r => r.SpecialistId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // Настройки для Message
             modelBuilder.Entity<Message>()
                 .HasOne(m => m.Chat)

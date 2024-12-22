@@ -1158,18 +1158,14 @@
             "type": "string",
             "nullable": true
           },
-          "rating": {
-            "type": "integer",
-            "format": "int32"
-          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
           },
-          "specialist": {
+          "client": {
             "$ref": "#/components/schemas/User"
           },
-          "client": {
+          "specialist": {
             "$ref": "#/components/schemas/User"
           }
         },
