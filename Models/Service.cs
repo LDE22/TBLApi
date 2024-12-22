@@ -10,7 +10,7 @@
         public string City { get; set; } // Добавлено
         public string SpecialistName { get; set; } // Добавлено
 
-        public ICollection<Favorite> Favorites { get; set; }
-        public ICollection<Review> Reviews { get; set; }
+        public List<Review> Reviews { get; set; } = new List<Review>();
+        public List<Favorite> Favorites { get; set; } = new List<Favorite>();
     }
 }

@@ -1269,17 +1269,17 @@
             "type": "string",
             "nullable": true
           },
-          "favorites": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Favorite"
-            },
-            "nullable": true
-          },
           "reviews": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Review"
+            },
+            "nullable": true
+          },
+          "favorites": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Favorite"
             },
             "nullable": true
           }
@@ -1397,17 +1397,17 @@
             "format": "date-time",
             "nullable": true
           },
-          "favorites": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Favorite"
-            },
-            "nullable": true
-          },
           "reviews": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Review"
+            },
+            "nullable": true
+          },
+          "favorites": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Favorite"
             },
             "nullable": true
           }

@@ -20,7 +20,7 @@ namespace TBLApi.Models
         public DateTime? PasswordResetExpiration { get; set; }
         public static string GetDefaultAvatarBase64() => DefaultAvatarBase64;
 
-        public ICollection<Favorite> Favorites { get; set; }
-        public ICollection<Review> Reviews { get; set; }
+        public List<Review> Reviews { get; set; } = new List<Review>();
+        public List<Favorite> Favorites { get; set; } = new List<Favorite>();
     }
 }
