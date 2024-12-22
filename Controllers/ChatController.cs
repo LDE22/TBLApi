@@ -100,29 +100,35 @@ namespace TBLApi.Controllers
         {
             if (message == null || message.ChatId == 0 || string.IsNullOrWhiteSpace(message.Content))
             {
-                return BadRequest(new { message = "Invalid message data." });
+                return BadRequest(new { message = "Некорректные данные сообщения." });
             }
 
-            // Добавляем сообщение
-            _context.Messages.Add(message);
-
-            // Обновляем "LastMessage" и "Timestamp" в чате
+            // Проверяем существование чата
             var chat = await _context.Chats.FindAsync(message.ChatId);
-            if (chat != null)
+            if (chat == null)
             {
-                chat.LastMessage = message.Content;
-                chat.Timestamp = DateTime.UtcNow;
-            }
-            else
-            {
-                return NotFound(new { message = "Chat not found." });
+                return NotFound(new { message = "Чат не найден." });
             }
 
-            // Сохраняем изменения
+            // Добавляем сообщение в базу данных
+            _context.Messages.Add(new Message
+            {
+                ChatId = message.ChatId,
+                SenderId = message.SenderId,
+                ReceiverId = message.ReceiverId,
+                Content = message.Content,
+                Timestamp = DateTime.UtcNow
+            });
+
+            // Обновляем последний статус чата
+            chat.LastMessage = message.Content;
+            chat.Timestamp = DateTime.UtcNow;
+
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Message sent successfully." });
+            return Ok(new { message = "Сообщение успешно отправлено." });
         }
+
         public class CreateChatRequest
         {
             public int SenderId { get; set; }
