@@ -26,8 +26,7 @@ namespace TBLApi.Controllers
 
             return Ok(favorites);
         }
-
-        [HttpPost]
+        [HttpPost("add")]
         public async Task<IActionResult> AddToFavorite([FromBody] Favorite favorite)
         {
             _context.Favorites.Add(favorite);
