@@ -6,6 +6,8 @@ namespace TBLApi.Models
 {
     public class Favorite
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required] // Поле ClientId обязательно

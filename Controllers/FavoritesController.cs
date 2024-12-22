@@ -42,6 +42,14 @@ namespace TBLApi.Controllers
             {
                 return NotFound("Client or Service not found.");
             }
+            var existingFavorite = await _context.Favorites
+        .FirstOrDefaultAsync(f => f.ClientId == favorite.ClientId && f.ServiceId == favorite.ServiceId);
+
+            if (existingFavorite != null)
+            {
+                // Если запись уже существует, возвращаем ошибку
+                return BadRequest(new { message = "The service is already in the favorites." });
+            }
 
             // Обнуляем навигационные свойства
             favorite.Client = null;
