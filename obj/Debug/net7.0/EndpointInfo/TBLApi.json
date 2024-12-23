@@ -1548,6 +1548,10 @@
             "type": "string",
             "nullable": true
           },
+          "actionTaken": {
+            "type": "string",
+            "nullable": true
+          },
           "status": {
             "type": "string",
             "nullable": true
@@ -1559,10 +1563,6 @@
           "moderatorId": {
             "type": "integer",
             "format": "int32"
-          },
-          "actionTaken": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false

@@ -25,13 +25,6 @@ public class TicketController : ControllerBase
             return BadRequest("Ticket is required.");
         }
 
-        // ”станавливаем значени€ по умолчанию, если они не указаны
-        ticket.CreatedAt = DateTime.UtcNow;
-        if (string.IsNullOrEmpty(ticket.Status))
-        {
-            ticket.Status = "Active";
-        }
-
         try
         {
             _context.Tickets.Add(ticket);
@@ -40,10 +33,9 @@ public class TicketController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Error creating ticket: {ex.Message}");
+            return StatusCode(500, $"Error creating ticket: {ex.Message} | Inner Exception: {ex.InnerException?.Message}");
         }
     }
-
 
     // ѕолучить все тикеты (дл€ модераторов)
     [HttpGet]
