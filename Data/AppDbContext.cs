@@ -16,7 +16,7 @@ namespace TBLApi.Data
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Chat> Chats { get; set; }
-
+        public DbSet<Booking> Bookings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
