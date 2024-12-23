@@ -12,9 +12,8 @@ namespace TBLApi.Models
         public string TimeInterval { get; set; }
 
         // Связь с услугой
-        public virtual ServiceModel Service { get; set; }
-
-        public virtual User Client { get; set; }
+        public virtual ServiceModel? Service { get; set; } // Навигационное свойство
+        public virtual User? Client { get; set; }
     }
 
 }

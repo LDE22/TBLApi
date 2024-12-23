@@ -23,18 +23,6 @@ namespace TBLApi.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Booking>()
-        .HasOne(b => b.Service) // Связь один к одному или один ко многим
-        .WithMany(s => s.Bookings)
-        .HasForeignKey(b => b.ServiceId)
-        .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Review>()
-        .HasOne(r => r.Client)
-        .WithMany()
-        .HasForeignKey(r => r.ClientId)
-        .OnDelete(DeleteBehavior.Restrict);
-
             modelBuilder.Entity<Review>()
                 .HasOne(r => r.Specialist)
                 .WithMany()
@@ -65,6 +53,19 @@ namespace TBLApi.Data
                 .WithMany(s => s.Favorites)
                 .HasForeignKey(f => f.ServiceId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Booking>()
+    .HasOne(b => b.Service) // Связь с Service
+    .WithMany(s => s.Bookings)
+    .HasForeignKey(b => b.ServiceId)
+    .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Client) // Связь с User (клиентом)
+                .WithMany()
+                .HasForeignKey(b => b.ClientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }
