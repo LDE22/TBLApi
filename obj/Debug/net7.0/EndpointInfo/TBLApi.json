@@ -715,6 +715,27 @@
       }
     },
     "/api/Tickets/{id}": {
+      "get": {
+        "tags": [
+          "Ticket"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
       "put": {
         "tags": [
           "Ticket"
@@ -1561,22 +1582,6 @@
             "format": "int32"
           },
           "actionTaken": {
-            "type": "string",
-            "nullable": true
-          },
-          "complainantName": {
-            "type": "string",
-            "nullable": true
-          },
-          "complainantPhoto": {
-            "type": "string",
-            "nullable": true
-          },
-          "targetName": {
-            "type": "string",
-            "nullable": true
-          },
-          "targetPhoto": {
             "type": "string",
             "nullable": true
           }

@@ -3,6 +3,22 @@
   "WorkspaceRootPath": "C:\\PRODJ\\TBLApi\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|c:\\prodj\\tblapi\\models\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|solutionrelative:models\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|c:\\prodj\\tblapi\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|solutionrelative:data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|c:\\prodj\\tblapi\\controllers\\servicescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|solutionrelative:controllers\\servicescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|c:\\prodj\\tblapi\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|solutionrelative:controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|c:\\prodj\\tblapi\\controllers\\ticketscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F2F6AAD9-D7E0-4D13-A227-598FEB8056E7}|TBLApi.csproj|solutionrelative:controllers\\ticketscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -18,7 +34,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -31,6 +47,56 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\PRODJ\\TBLApi\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\AppDbContext.cs",
+              "ToolTip": "C:\\PRODJ\\TBLApi\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "Data\\AppDbContext.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAA7wBsAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-23T05:09:16.921Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ServicesController.cs",
+              "DocumentMoniker": "C:\\PRODJ\\TBLApi\\Controllers\\ServicesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ServicesController.cs",
+              "ToolTip": "C:\\PRODJ\\TBLApi\\Controllers\\ServicesController.cs",
+              "RelativeToolTip": "Controllers\\ServicesController.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-23T05:06:54.565Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "C:\\PRODJ\\TBLApi\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
+              "ToolTip": "C:\\PRODJ\\TBLApi\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "Controllers\\UsersController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-23T05:06:53.399Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Service.cs",
+              "DocumentMoniker": "C:\\PRODJ\\TBLApi\\Models\\Service.cs",
+              "RelativeDocumentMoniker": "Models\\Service.cs",
+              "ToolTip": "C:\\PRODJ\\TBLApi\\Models\\Service.cs*",
+              "RelativeToolTip": "Models\\Service.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAABRAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-23T05:06:38.944Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "Ticket.cs",
               "DocumentMoniker": "C:\\PRODJ\\TBLApi\\Models\\Ticket.cs",
               "RelativeDocumentMoniker": "Models\\Ticket.cs",
@@ -42,7 +108,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "TicketsController.cs",
               "DocumentMoniker": "C:\\PRODJ\\TBLApi\\Controllers\\TicketsController.cs",
               "RelativeDocumentMoniker": "Controllers\\TicketsController.cs",
@@ -50,8 +116,7 @@
               "RelativeToolTip": "Controllers\\TicketsController.cs",
               "ViewState": "AgIAADoAAAAAAAAAAAAowGcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-23T03:00:59.058Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-23T03:00:59.058Z"
             }
           ]
         }
