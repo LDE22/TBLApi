@@ -1137,7 +1137,7 @@
           },
           "day": {
             "type": "string",
-            "nullable": true
+            "format": "date-time"
           },
           "timeInterval": {
             "type": "string",

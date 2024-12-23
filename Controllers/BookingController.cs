@@ -18,20 +18,23 @@ namespace TBLApi.Controllers
         }
 
         [HttpPost("book")]
-        public async Task<IActionResult> BookService([FromBody] Booking booking)
+        public async Task<IActionResult> BookService(Booking booking)
         {
             try
             {
-                // Добавляем запись в базу данных
+                // Приведение даты к UTC
+                if (booking.Day.Kind == DateTimeKind.Unspecified)
+                {
+                    booking.Day = DateTime.SpecifyKind(booking.Day, DateTimeKind.Utc);
+                }
+
                 _context.Bookings.Add(booking);
                 await _context.SaveChangesAsync();
-
-                // Возвращаем созданную запись
                 return Ok(booking);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Ошибка при бронировании: {ex.Message}");
+                return StatusCode(500, $"Ошибка при бронировании: {ex.Message}, {ex.InnerException?.Message}");
             }
         }
 
