@@ -277,6 +277,22 @@ namespace TBLApi.Controllers
 
             return Ok(statistic);
         }
+        [HttpPost("statistics")]
+        public async Task<IActionResult> CreateStatistics(ModeratorStatistic stats)
+        {
+            try
+            {
+                // Добавляем статистику в базу
+                _context.ModeratorStatistics.Add(stats);
+                await _context.SaveChangesAsync();
+                return Ok(stats);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ошибка при создании статистики: {ex.Message}");
+            }
+        }
+
         public class ResetPasswordDto
         {
             public string Token { get; set; }

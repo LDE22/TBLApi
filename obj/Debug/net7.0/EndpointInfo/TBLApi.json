@@ -1175,6 +1175,37 @@
           }
         }
       }
+    },
+    "/api/Users/statistics": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModeratorStatistic"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModeratorStatistic"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModeratorStatistic"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1315,6 +1346,36 @@
           "timestamp": {
             "type": "string",
             "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ModeratorStatistic": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "moderatorId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "closedTickets": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "blockedProfiles": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "restrictedProfiles": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rejectedTickets": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
