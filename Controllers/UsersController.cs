@@ -294,6 +294,31 @@ namespace TBLApi.Controllers
             }
         }
 
+        [HttpDelete("{userId}/block")]
+        public async Task<IActionResult> DeleteUser(int userId)
+        {
+            try
+            {
+                // Найти пользователя в базе данных
+                var user = await _context.Users.FindAsync(userId);
+                if (user == null)
+                {
+                    return NotFound(new { message = "Пользователь не найден." });
+                }
+
+                // Удаление пользователя из базы данных
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Пользователь успешно удален." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Ошибка при удалении пользователя.", details = ex.Message });
+            }
+        }
+
+
         public class ResetPasswordDto
         {
             public string Token { get; set; }
