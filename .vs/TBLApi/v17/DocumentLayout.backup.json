@@ -36,10 +36,9 @@
               "RelativeDocumentMoniker": "Models\\Ticket.cs",
               "ToolTip": "C:\\PRODJ\\TBLApi\\Models\\Ticket.cs",
               "RelativeToolTip": "Models\\Ticket.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAzAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-23T04:13:20.478Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-23T04:13:20.478Z"
             },
             {
               "$type": "Document",
@@ -49,7 +48,7 @@
               "RelativeDocumentMoniker": "Controllers\\TicketsController.cs",
               "ToolTip": "C:\\PRODJ\\TBLApi\\Controllers\\TicketsController.cs",
               "RelativeToolTip": "Controllers\\TicketsController.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAiwB0AAAAiAAAAAAAAAA==",
+              "ViewState": "AgIAADoAAAAAAAAAAAAowGcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-23T03:00:59.058Z",
               "EditorCaption": ""

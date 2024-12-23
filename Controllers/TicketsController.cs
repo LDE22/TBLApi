@@ -65,6 +65,44 @@ public class TicketController : ControllerBase
         }
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetTicketById(int id)
+    {
+        try
+        {
+            // Ищем тикет по его ID
+            var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.Id == id);
+            if (ticket == null)
+            {
+                return NotFound($"Тикет с ID {id} не найден.");
+            }
+
+            // Формируем расширенный ответ, если нужно
+            var response = new
+            {
+                ticket.Id,
+                ticket.UserId,
+                ticket.TargetId,
+                ticket.Comment,
+                ticket.Status,
+                ticket.CreatedAt,
+                ticket.ModeratorId,
+                ticket.ActionTaken,
+                ComplainantName = _context.Users.FirstOrDefault(u => u.Id == ticket.UserId)?.Name,
+                ComplainantPhoto = _context.Users.FirstOrDefault(u => u.Id == ticket.UserId)?.PhotoBase64,
+                TargetName = _context.Users.FirstOrDefault(u => u.Id == ticket.TargetId)?.Name,
+                TargetPhoto = _context.Users.FirstOrDefault(u => u.Id == ticket.TargetId)?.PhotoBase64
+            };
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Ошибка при получении тикета: {ex.Message}");
+        }
+    }
+
+
 
     // Обновить тикет (действие модератора)
     [HttpPut("{id}")]

@@ -18,6 +18,6 @@ namespace TBLApi.Models
         [Required]
         public List<Favorite> Favorites { get; set; } = new List<Favorite>();
 
-        public virtual ICollection<Booking> Bookings { get; set; }
+       // public virtual ICollection<Booking> Bookings { get; set; }
     }
 }
