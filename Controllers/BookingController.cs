@@ -41,33 +41,34 @@ namespace TBLApi.Controllers
         [HttpGet("specialist/{specialistId}")]
         public async Task<IActionResult> GetSpecialistOrders(int specialistId)
         {
-            try
-            {
-                var orders = await _context.Bookings
-                    .Where(b => b.SpecialistId == specialistId)
-                    .ToListAsync();
-                return Ok(orders);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Ошибка при загрузке заказов: {ex.Message}");
-            }
-        }
+            var orders = await _context.Bookings
+                .Where(b => b.SpecialistId == specialistId)
+                .Select(b => new
+                {
+                    Title = b.Service.Title,
+                    Description = b.Service.Description,
+                    Day = b.Day,
+                    TimeInterval = b.TimeInterval
+                })
+                .ToListAsync();
 
+            return Ok(orders);
+        }
         [HttpGet("client/{clientId}")]
         public async Task<IActionResult> GetClientMeetings(int clientId)
         {
-            try
-            {
-                var meetings = await _context.Bookings
-                    .Where(b => b.ClientId == clientId)
-                    .ToListAsync();
-                return Ok(meetings);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Ошибка при загрузке встреч: {ex.Message}");
-            }
+            var meetings = await _context.Bookings
+                .Where(b => b.ClientId == clientId)
+                .Select(b => new
+                {
+                    Title = b.Service.Title,
+                    Description = b.Service.Description,
+                    Day = b.Day,
+                    TimeInterval = b.TimeInterval
+                })
+                .ToListAsync();
+
+            return Ok(meetings);
         }
     }
 }

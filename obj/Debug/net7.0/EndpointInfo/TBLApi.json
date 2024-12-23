@@ -1142,6 +1142,9 @@
           "timeInterval": {
             "type": "string",
             "nullable": true
+          },
+          "service": {
+            "$ref": "#/components/schemas/ServiceModel"
           }
         },
         "additionalProperties": false
@@ -1388,6 +1391,13 @@
             "items": {
               "$ref": "#/components/schemas/Favorite"
             }
+          },
+          "bookings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Booking"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false

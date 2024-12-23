@@ -22,6 +22,12 @@ namespace TBLApi.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Booking>()
+        .HasOne(b => b.Service) // Связь один к одному или один ко многим
+        .WithMany(s => s.Bookings)
+        .HasForeignKey(b => b.ServiceId)
+        .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Review>()
         .HasOne(r => r.Client)
         .WithMany()
