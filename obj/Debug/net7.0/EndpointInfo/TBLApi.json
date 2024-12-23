@@ -36,14 +36,14 @@
         }
       }
     },
-    "/api/Booking/specialist/{specialistId}": {
+    "/api/Booking/specialist/{id}": {
       "get": {
         "tags": [
           "Booking"
         ],
         "parameters": [
           {
-            "name": "specialistId",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1145,6 +1145,9 @@
           },
           "service": {
             "$ref": "#/components/schemas/ServiceModel"
+          },
+          "client": {
+            "$ref": "#/components/schemas/User"
           }
         },
         "additionalProperties": false

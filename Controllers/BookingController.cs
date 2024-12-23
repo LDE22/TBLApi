@@ -38,22 +38,36 @@ namespace TBLApi.Controllers
             }
         }
 
-        [HttpGet("specialist/{specialistId}")]
-        public async Task<IActionResult> GetSpecialistOrders(int specialistId)
+        [HttpGet("specialist/{id}")]
+        public async Task<IActionResult> GetSpecialistOrders(int id)
         {
-            var orders = await _context.Bookings
-                .Where(b => b.SpecialistId == specialistId)
-                .Select(b => new
-                {
-                    Title = b.Service.Title,
-                    Description = b.Service.Description,
-                    Day = b.Day,
-                    TimeInterval = b.TimeInterval
-                })
-                .ToListAsync();
+            try
+            {
+                var bookings = await _context.Bookings
+                    .Where(b => b.SpecialistId == id)
+                    .Select(b => new
+                    {
+                        b.Id,
+                        b.SpecialistId,
+                        b.ClientId,
+                        b.ServiceId,
+                        b.Day,
+                        b.TimeInterval,
+                        Title = b.Service.Title,
+                        Description = b.Service.Description,
+                        ClientName = b.Client.Name, // Связь с клиентом
+                        ClientPhoto = b.Client.PhotoBase64 // Фото клиента
+                    })
+                    .ToListAsync();
 
-            return Ok(orders);
+                return Ok(bookings);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ошибка при загрузке заказов: {ex.Message}");
+            }
         }
+
         [HttpGet("client/{clientId}")]
         public async Task<IActionResult> GetClientMeetings(int clientId)
         {

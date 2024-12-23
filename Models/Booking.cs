@@ -13,6 +13,8 @@ namespace TBLApi.Models
 
         // Связь с услугой
         public virtual ServiceModel Service { get; set; }
+
+        public virtual User Client { get; set; }
     }
 
 }

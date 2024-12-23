@@ -34,13 +34,13 @@
   {
     "ContainingType": "TBLApi.Controllers.BookingController",
     "Method": "GetSpecialistOrders",
-    "RelativePath": "api/Booking/specialist/{specialistId}",
+    "RelativePath": "api/Booking/specialist/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "specialistId",
+        "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
       }
