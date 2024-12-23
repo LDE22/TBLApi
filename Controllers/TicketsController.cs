@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using Microsoft.EntityFrameworkCore;
 using TBLApi.Data;
 using TBLApi.Models;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 [ApiController]
 [Route("api/Tickets")]
@@ -63,8 +64,9 @@ public class TicketController : ControllerBase
     }
 
     // Обновить тикет (действие модератора)
+    // Обновить тикет (действие модератора)
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateTicket(int id, Ticket updatedTicket)
+    public async Task<IActionResult> UpdateTicket(int id, [FromBody] Ticket updatedTicket)
     {
         try
         {
@@ -73,6 +75,38 @@ public class TicketController : ControllerBase
 
             ticket.Status = updatedTicket.Status;
             ticket.ActionTaken = updatedTicket.ActionTaken;
+
+            // Обновляем статистику модератора
+            var moderatorId = updatedTicket.ModeratorId; // Используем ModeratorId из объекта updatedTicket
+            var statistic = await _context.ModeratorStatistics.FirstOrDefaultAsync(m => m.ModeratorId == moderatorId);
+
+            if (statistic == null)
+            {
+                statistic = new ModeratorStatistic
+                {
+                    ModeratorId = moderatorId
+                };
+                _context.ModeratorStatistics.Add(statistic);
+            }
+
+            switch (updatedTicket.ActionTaken)
+            {
+                case "Заблокировать":
+                    statistic.BlockedProfiles++;
+                    break;
+                case "Ограничение":
+                    statistic.RestrictedProfiles++;
+                    break;
+            }
+
+            if (updatedTicket.Status == "Отклонено")
+            {
+                statistic.RejectedTickets++;
+            }
+            else if (updatedTicket.Status == "Закрыто")
+            {
+                statistic.ClosedTickets++;
+            }
 
             await _context.SaveChangesAsync();
             return Ok(ticket);

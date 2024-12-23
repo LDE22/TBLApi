@@ -264,7 +264,25 @@ public async Task<IActionResult> GetUserById(int id)
 
             return Ok(specialist);
         }
+        [HttpGet("moderator/stats/{id}")]
+        public async Task<IActionResult> GetModeratorStats(int id)
+        {
+            try
+            {
+                var stats = await _context.ModeratorStatistics.FirstOrDefaultAsync(m => m.ModeratorId == id);
 
+                if (stats == null)
+                {
+                    return NotFound("Статистика для данного модератора не найдена.");
+                }
+
+                return Ok(stats);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ошибка при получении статистики: {ex.Message}");
+            }
+        }
     }
 
     public class ResetPasswordDto

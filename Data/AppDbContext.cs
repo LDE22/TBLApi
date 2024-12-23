@@ -17,6 +17,7 @@ namespace TBLApi.Data
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Chat> Chats { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<ModeratorStatistic> ModeratorStatistics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

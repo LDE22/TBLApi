@@ -536,6 +536,22 @@
   },
   {
     "ContainingType": "TBLApi.Controllers.UsersController",
+    "Method": "GetModeratorStats",
+    "RelativePath": "api/Users/moderator/stats/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.UsersController",
     "Method": "Register",
     "RelativePath": "api/Users/register",
     "HttpMethod": "POST",

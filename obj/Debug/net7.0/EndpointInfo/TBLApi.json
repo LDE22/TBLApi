@@ -1152,6 +1152,29 @@
           }
         }
       }
+    },
+    "/api/Users/moderator/stats/{id}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1457,6 +1480,10 @@
             "format": "int32"
           },
           "targetId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "moderatorId": {
             "type": "integer",
             "format": "int32"
           },
