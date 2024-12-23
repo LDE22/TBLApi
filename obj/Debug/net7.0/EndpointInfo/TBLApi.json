@@ -674,19 +674,9 @@
       }
     },
     "/api/Tickets": {
-      "get": {
-        "tags": [
-          "Tickets"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
       "post": {
         "tags": [
-          "Tickets"
+          "Ticket"
         ],
         "requestBody": {
           "content": {
@@ -712,12 +702,62 @@
             "description": "OK"
           }
         }
+      },
+      "get": {
+        "tags": [
+          "Ticket"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/api/Tickets/{id}": {
+      "put": {
+        "tags": [
+          "Ticket"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Ticket"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Ticket"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Ticket"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
       "delete": {
         "tags": [
-          "Tickets"
+          "Ticket"
         ],
         "parameters": [
           {
@@ -1412,11 +1452,27 @@
             "type": "integer",
             "format": "int32"
           },
-          "title": {
+          "complainantId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "targetId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comment": {
             "type": "string",
             "nullable": true
           },
-          "description": {
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "actionTaken": {
             "type": "string",
             "nullable": true
           }
