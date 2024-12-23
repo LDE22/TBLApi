@@ -18,18 +18,16 @@ public class TicketController : ControllerBase
 
     // Создать тикет
     [HttpPost]
-    public async Task<IActionResult> CreateTicket(Ticket ticket)
+    public async Task<IActionResult> CreateTicket([FromBody] Ticket ticket)
     {
-        try
+        if (ticket == null)
         {
-            _context.Tickets.Add(ticket);
-            await _context.SaveChangesAsync();
-            return Ok(ticket);
+            return BadRequest("Ticket is required.");
         }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Ошибка при создании тикета: {ex.Message}");
-        }
+
+        _context.Tickets.Add(ticket);
+        await _context.SaveChangesAsync();
+        return Ok(ticket);
     }
 
     // Получить все тикеты (для модераторов)

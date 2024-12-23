@@ -1544,10 +1544,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "moderatorId": {
-            "type": "integer",
-            "format": "int32"
-          },
           "comment": {
             "type": "string",
             "nullable": true
@@ -1559,6 +1555,10 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "moderatorId": {
+            "type": "integer",
+            "format": "int32"
           },
           "actionTaken": {
             "type": "string",
