@@ -272,24 +272,25 @@ namespace TBLApi.Controllers
 
             if (statistic == null)
             {
-                return NotFound("Статистика не найдена.");
+                return NotFound("Statistics not found.");
             }
 
             return Ok(statistic);
         }
+
         [HttpPost("statistics")]
         public async Task<IActionResult> CreateStatistics(ModeratorStatistic stats)
         {
             try
             {
-                // Добавляем статистику в базу
+                // Add statistics to the database
                 _context.ModeratorStatistics.Add(stats);
                 await _context.SaveChangesAsync();
                 return Ok(stats);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Ошибка при создании статистики: {ex.Message}");
+                return StatusCode(500, $"Error while creating statistics: {ex.Message}");
             }
         }
 
