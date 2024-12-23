@@ -25,10 +25,25 @@ public class TicketController : ControllerBase
             return BadRequest("Ticket is required.");
         }
 
-        _context.Tickets.Add(ticket);
-        await _context.SaveChangesAsync();
-        return Ok(ticket);
+        // ”станавливаем значени€ по умолчанию, если они не указаны
+        ticket.CreatedAt = DateTime.UtcNow;
+        if (string.IsNullOrEmpty(ticket.Status))
+        {
+            ticket.Status = "Active";
+        }
+
+        try
+        {
+            _context.Tickets.Add(ticket);
+            await _context.SaveChangesAsync();
+            return Ok(ticket);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error creating ticket: {ex.Message}");
+        }
     }
+
 
     // ѕолучить все тикеты (дл€ модераторов)
     [HttpGet]
@@ -40,9 +55,9 @@ public class TicketController : ControllerBase
                 .Select(t => new
                 {
                     t.Id,
-                    t.ComplainantId,
-                    ComplainantName = _context.Users.FirstOrDefault(u => u.Id == t.ComplainantId).Name,
-                    ComplainantPhoto = _context.Users.FirstOrDefault(u => u.Id == t.ComplainantId).PhotoBase64,
+                    t.UserId,
+                    ComplainantName = _context.Users.FirstOrDefault(u => u.Id == t.UserId).Name,
+                    ComplainantPhoto = _context.Users.FirstOrDefault(u => u.Id == t.UserId).PhotoBase64,
                     t.TargetId,
                     TargetName = _context.Users.FirstOrDefault(u => u.Id == t.TargetId).Name,
                     TargetPhoto = _context.Users.FirstOrDefault(u => u.Id == t.TargetId).PhotoBase64,

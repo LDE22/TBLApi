@@ -1536,7 +1536,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "complainantId": {
+          "userId": {
             "type": "integer",
             "format": "int32"
           },
