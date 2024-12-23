@@ -64,7 +64,6 @@ public class TicketController : ControllerBase
     }
 
     // Обновить тикет (действие модератора)
-    // Обновить тикет (действие модератора)
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTicket(int id, [FromBody] Ticket updatedTicket)
     {

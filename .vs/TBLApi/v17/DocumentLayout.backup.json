@@ -42,8 +42,7 @@
               "RelativeToolTip": "Data\\AppDbContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-23T01:32:59.62Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-23T01:32:59.62Z"
             },
             {
               "$type": "Document",
@@ -51,9 +50,9 @@
               "Title": "TicketsController.cs",
               "DocumentMoniker": "C:\\PRODJ\\TBLApi\\Controllers\\TicketsController.cs",
               "RelativeDocumentMoniker": "Controllers\\TicketsController.cs",
-              "ToolTip": "C:\\PRODJ\\TBLApi\\Controllers\\TicketsController.cs*",
-              "RelativeToolTip": "Controllers\\TicketsController.cs*",
-              "ViewState": "AgIAAD0AAAAAAAAAAAAcwHYAAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\PRODJ\\TBLApi\\Controllers\\TicketsController.cs",
+              "RelativeToolTip": "Controllers\\TicketsController.cs",
+              "ViewState": "AgIAAD0AAAAAAAAAAAAcwEAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-23T01:31:27.649Z",
               "EditorCaption": ""
@@ -68,8 +67,7 @@
               "RelativeToolTip": "Controllers\\UsersController.cs",
               "ViewState": "AgIAAPsAAAAAAAAAAADgvw8BAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-23T01:28:23.379Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-23T01:28:23.379Z"
             }
           ]
         }
