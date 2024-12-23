@@ -24,6 +24,10 @@ public class TicketController : ControllerBase
         {
             return BadRequest("Ticket is required.");
         }
+        ticket.ComplainantName = null;
+        ticket.ComplainantPhoto = null;
+        ticket.TargetName = null;
+        ticket.TargetPhoto = null;
 
         try
         {
