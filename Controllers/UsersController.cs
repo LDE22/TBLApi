@@ -92,7 +92,7 @@ namespace TBLApi.Controllers
                 return Unauthorized(new { message = "Please verify your email" });
             }
 
-            return Ok(new { user.Id, user.Username, user.Email, user.Role, user.Description, user.City, user.IsEmailConfirmed, user.PhotoBase64});
+            return Ok(new { user.Id, user.Username, user.Email, user.Role, user.Description, user.City, user.IsEmailConfirmed, user.PhotoBase64 });
         }
 
         [HttpPost("send-password-reset")]
@@ -201,15 +201,15 @@ namespace TBLApi.Controllers
         }
 
         [HttpGet("{id}")]
-public async Task<IActionResult> GetUserById(int id)
-{
-    var user = await _context.Users.FindAsync(id);
-    if (user == null)
-    {
-        return NotFound(new { message = "Пользователь не найден" });
-    }
-    return Ok(user);
-}
+        public async Task<IActionResult> GetUserById(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound(new { message = "Пользователь не найден" });
+            }
+            return Ok(user);
+        }
 
         // Получение логов по UserId
         [HttpGet("user/{userId}")]
@@ -264,7 +264,7 @@ public async Task<IActionResult> GetUserById(int id)
 
             return Ok(specialist);
         }
-        [HttpGet("{moderatorId}")]
+        [HttpGet("{moderatorId}/statistics")]
         public async Task<IActionResult> GetStatistics(int moderatorId)
         {
             var statistic = await _context.ModeratorStatistics
@@ -277,44 +277,43 @@ public async Task<IActionResult> GetUserById(int id)
 
             return Ok(statistic);
         }
-    }
+        public class ResetPasswordDto
+        {
+            public string Token { get; set; }
+            public string NewPassword { get; set; }
+        }
 
-    public class ResetPasswordDto
-{
-    public string Token { get; set; }
-    public string NewPassword { get; set; }
-}
+        public class PhotoUploadRequest
+        {
+            public string PhotoBase64 { get; set; }
+        }
 
-    public class PhotoUploadRequest
-    {
-        public string PhotoBase64 { get; set; }
-    }
+        public class PasswordResetRequestModel
+        {
+            public string Email { get; set; }
+        }
 
-    public class PasswordResetRequestModel
-    {
-        public string Email { get; set; }
-    }
+        public class PasswordResetModel
+        {
+            public string NewPassword { get; set; }
+        }
 
-    public class PasswordResetModel
-    {
-        public string NewPassword { get; set; }
-    }
+        public class LoginRequestModel
+        {
+            public string Login { get; set; }
+            public string Password { get; set; }
+        }
 
-    public class LoginRequestModel
-    {
-        public string Login { get; set; }
-        public string Password { get; set; }
-    }
-
-    public class EmailRequest
-    {
-        public string To { get; set; }
-        public string Subject { get; set; }
-        public string Body { get; set; }
-    }
-    public class UpdatePasswordRequest
-    {
-        public string Token { get; set; }
-        public string NewPassword { get; set; }
+        public class EmailRequest
+        {
+            public string To { get; set; }
+            public string Subject { get; set; }
+            public string Body { get; set; }
+        }
+        public class UpdatePasswordRequest
+        {
+            public string Token { get; set; }
+            public string NewPassword { get; set; }
+        }
     }
 }

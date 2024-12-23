@@ -484,6 +484,22 @@
   },
   {
     "ContainingType": "TBLApi.Controllers.UsersController",
+    "Method": "GetStatistics",
+    "RelativePath": "api/Users/{moderatorId}/statistics",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "moderatorId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.UsersController",
     "Method": "GetAllUsers",
     "RelativePath": "api/Users/all",
     "HttpMethod": "GET",
@@ -518,7 +534,7 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "TBLApi.Controllers.LoginRequestModel",
+        "Type": "TBLApi.Controllers.UsersController\u002BLoginRequestModel",
         "IsRequired": true
       }
     ],
@@ -532,22 +548,6 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TBLApi.Controllers.UsersController",
-    "Method": "GetModeratorStats",
-    "RelativePath": "api/Users/moderator/stats/{id}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
     "ReturnTypes": []
   },
   {
@@ -576,7 +576,7 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "TBLApi.Controllers.ResetPasswordDto",
+        "Type": "TBLApi.Controllers.UsersController\u002BResetPasswordDto",
         "IsRequired": true
       }
     ],
@@ -608,7 +608,7 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "TBLApi.Controllers.EmailRequest",
+        "Type": "TBLApi.Controllers.UsersController\u002BEmailRequest",
         "IsRequired": true
       }
     ],
@@ -624,7 +624,7 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "TBLApi.Controllers.PasswordResetRequestModel",
+        "Type": "TBLApi.Controllers.UsersController\u002BPasswordResetRequestModel",
         "IsRequired": true
       }
     ],
@@ -661,7 +661,7 @@
       },
       {
         "Name": "request",
-        "Type": "TBLApi.Controllers.PhotoUploadRequest",
+        "Type": "TBLApi.Controllers.UsersController\u002BPhotoUploadRequest",
         "IsRequired": true
       }
     ],

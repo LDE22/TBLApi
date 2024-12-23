@@ -1153,14 +1153,14 @@
         }
       }
     },
-    "/api/Users/moderator/stats/{id}": {
+    "/api/Users/{moderatorId}/statistics": {
       "get": {
         "tags": [
           "Users"
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "moderatorId",
             "in": "path",
             "required": true,
             "schema": {
