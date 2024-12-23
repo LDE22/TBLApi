@@ -24,10 +24,6 @@ public class TicketController : ControllerBase
         {
             return BadRequest("Ticket is required.");
         }
-        ticket.ComplainantName = null;
-        ticket.ComplainantPhoto = null;
-        ticket.TargetName = null;
-        ticket.TargetPhoto = null;
 
         try
         {
@@ -58,10 +54,6 @@ public class TicketController : ControllerBase
                     CreatedAt = t.CreatedAt,
                     ModeratorId = t.ModeratorId,
                     ActionTaken = t.ActionTaken,
-                    ComplainantName = _context.Users.FirstOrDefault(u => u.Id == t.UserId).Name,
-                    ComplainantPhoto = _context.Users.FirstOrDefault(u => u.Id == t.UserId).PhotoBase64,
-                    TargetName = _context.Users.FirstOrDefault(u => u.Id == t.TargetId).Name,
-                    TargetPhoto = _context.Users.FirstOrDefault(u => u.Id == t.TargetId).PhotoBase64
                 })
                 .ToListAsync();
 
