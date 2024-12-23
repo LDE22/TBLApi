@@ -308,7 +308,8 @@ namespace TBLApi.Controllers
 
                 // Удаление пользователя из базы данных
                 _context.Users.Remove(user);
-                await _context.SaveChangesAsync();
+                // Вызов процедуры через SQL-запрос
+                await _context.Database.ExecuteSqlRawAsync($"SELECT public.delete_user_and_dependencies({id});");
 
                 return Ok(new { message = "Пользователь успешно удален." });
             }
