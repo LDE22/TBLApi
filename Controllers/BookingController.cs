@@ -20,23 +20,29 @@ namespace TBLApi.Controllers
         [HttpPost("book")]
         public async Task<IActionResult> BookService(Booking booking)
         {
+            if (booking.SpecialistId <= 0 || booking.ClientId <= 0 || booking.ServiceId <= 0)
+            {
+                return BadRequest(new { message = "Все обязательные поля должны быть заполнены." });
+            }
+
+            if (string.IsNullOrWhiteSpace(booking.TimeInterval))
+            {
+                return BadRequest(new { message = "Временной интервал не указан." });
+            }
+
             try
             {
-                // Приведение даты к UTC
-                if (booking.Day.Kind == DateTimeKind.Unspecified)
-                {
-                    booking.Day = DateTime.SpecifyKind(booking.Day, DateTimeKind.Utc);
-                }
-
+                booking.Day = booking.Day.ToUniversalTime();
                 _context.Bookings.Add(booking);
                 await _context.SaveChangesAsync();
                 return Ok(booking);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Ошибка при бронировании: {ex.Message}, {ex.InnerException?.Message}");
+                return StatusCode(500, $"Ошибка при бронировании: {ex.Message}");
             }
         }
+
 
         [HttpGet("specialist/{id}")]
         public async Task<IActionResult> GetSpecialistOrders(int id)
