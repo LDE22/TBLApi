@@ -54,8 +54,7 @@
               "RelativeToolTip": "Data\\AppDbContext.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAA7wBsAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-23T05:09:16.921Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-23T05:09:16.921Z"
             },
             {
               "$type": "Document",
@@ -89,7 +88,7 @@
               "RelativeDocumentMoniker": "Models\\Service.cs",
               "ToolTip": "C:\\PRODJ\\TBLApi\\Models\\Service.cs*",
               "RelativeToolTip": "Models\\Service.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAABRAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-23T05:06:38.944Z",
               "EditorCaption": ""

@@ -39,6 +39,7 @@ public class ServicesController : ControllerBase
         if (service == null) return NotFound(new { message = "Service not found." });
 
         service.SpecialistName = updatedService.SpecialistName ?? service.SpecialistName;
+        service.Title = updatedService.Title ?? service.Title;
         service.Description = updatedService.Description ?? service.Description;
         service.Price = updatedService.Price != 0 ? updatedService.Price : service.Price;
 
