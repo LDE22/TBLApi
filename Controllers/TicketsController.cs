@@ -44,19 +44,20 @@ public class TicketController : ControllerBase
         try
         {
             var tickets = await _context.Tickets
-                .Select(t => new
+                .Select(t => new Ticket
                 {
-                    t.Id,
-                    t.UserId,
+                    Id = t.Id,
+                    UserId = t.UserId,
+                    TargetId = t.TargetId,
+                    Comment = t.Comment,
+                    Status = t.Status,
+                    CreatedAt = t.CreatedAt,
+                    ModeratorId = t.ModeratorId,
+                    ActionTaken = t.ActionTaken,
                     ComplainantName = _context.Users.FirstOrDefault(u => u.Id == t.UserId).Name,
                     ComplainantPhoto = _context.Users.FirstOrDefault(u => u.Id == t.UserId).PhotoBase64,
-                    t.TargetId,
                     TargetName = _context.Users.FirstOrDefault(u => u.Id == t.TargetId).Name,
-                    TargetPhoto = _context.Users.FirstOrDefault(u => u.Id == t.TargetId).PhotoBase64,
-                    t.Comment,
-                    t.Status,
-                    t.ActionTaken,
-                    t.CreatedAt
+                    TargetPhoto = _context.Users.FirstOrDefault(u => u.Id == t.TargetId).PhotoBase64
                 })
                 .ToListAsync();
 
@@ -67,6 +68,7 @@ public class TicketController : ControllerBase
             return StatusCode(500, $"Ошибка при получении тикетов: {ex.Message}");
         }
     }
+
 
     // Обновить тикет (действие модератора)
     [HttpPut("{id}")]
