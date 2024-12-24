@@ -9,8 +9,9 @@ namespace TBLApi.Models
         public required string Description { get; set; }
         public decimal Price { get; set; }
         public int SpecialistId { get; set; }
-        public string City { get; set; } // Добавлено
-        public string SpecialistName { get; set; } // Добавлено
+        public string City { get; set; }
+        public string SpecialistName { get; set; }
+
 
         [Required]
         public List<Review> Reviews { get; set; } = new List<Review>();

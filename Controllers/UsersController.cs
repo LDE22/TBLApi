@@ -318,6 +318,46 @@ namespace TBLApi.Controllers
                 return StatusCode(500, new { message = "Ошибка при удалении пользователя.", details = ex.Message });
             }
         }
+        [HttpPut("{id}/update-location")]
+        public async Task<IActionResult> UpdateLocation(int id, [FromBody] LocationUpdateRequest request)
+        {
+            var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
+            {
+                return NotFound(new { message = "Пользователь не найден." });
+            }
+
+            user.Latitude = request.Latitude;
+            user.Longitude = request.Longitude;
+            user.Address = request.Address;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Местоположение обновлено." });
+        }
+
+        [HttpGet("{id}/location")]
+        public async Task<IActionResult> GetLocation(int id)
+        {
+            var user = await _context.Users
+                .Where(u => u.Id == id)
+                .Select(u => new
+                {
+                    u.Latitude,
+                    u.Longitude,
+                    u.Address
+                })
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return NotFound(new { message = "Пользователь не найден." });
+            }
+
+            return Ok(user);
+        }
 
 
         public class ResetPasswordDto

@@ -67,13 +67,23 @@ public class ServicesController : ControllerBase
     [HttpDelete("delete/{id}")]
     public async Task<IActionResult> DeleteService(int id)
     {
-        var service = await _context.Services.FindAsync(id);
-        if (service == null) return NotFound(new { message = "Service not found." });
+        try
+        {
+            var service = await _context.Services.FindAsync(id);
+            if (service == null)
+            {
+                return NotFound(new { message = "Услуга не найдена." });
+            }
 
-        _context.Services.Remove(service);
-        await _context.SaveChangesAsync();
+            // Вызов функции каскадного удаления
+            await _context.Database.ExecuteSqlInterpolatedAsync($"SELECT delete_service({id})");
 
-        return Ok(new { message = "Service deleted successfully." });
+            return Ok(new { message = "Услуга успешно удалена." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Ошибка при удалении услуги: {ex.Message}");
+        }
     }
     // Получить услуги специалиста
     [HttpGet("specialist/{specialistId}")]

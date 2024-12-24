@@ -18,92 +18,68 @@ namespace TBLApi.Controllers
         }
 
         [HttpGet("{specialistId}")]
-        public async Task<IActionResult> GetSchedule(int specialistId)
+        public async Task<IActionResult> GetScheduleBySpecialist(int specialistId)
         {
-            try
-            {
-                var schedules = await _context.Schedules
-                    .Where(s => s.SpecialistId == specialistId)
-                    .ToListAsync();
-
-                return Ok(schedules);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Ошибка при загрузке расписания: {ex.Message}");
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddSchedule([FromBody] Schedule schedule)
-        {
-            if (schedule == null)
-            {
-                return BadRequest("Данные не могут быть пустыми.");
-            }
-
-            // Проверяем корректность JSON-форматов
-            try
-            {
-                var workingHours = JsonSerializer.Deserialize<List<string>>(schedule.WorkingHours);
-                var bookedIntervals = JsonSerializer.Deserialize<List<string>>(schedule.BookedIntervals);
-            }
-            catch (JsonException ex)
-            {
-                return BadRequest($"Неверный формат JSON: {ex.Message}");
-            }
-
-            _context.Schedules.Add(schedule);
-            await _context.SaveChangesAsync();
-
+            var schedule = await _context.Schedules
+                .Where(s => s.SpecialistId == specialistId)
+                .ToListAsync();
             return Ok(schedule);
         }
 
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSchedule(int id, Schedule updatedSchedule)
+        [HttpPost]
+        public async Task<IActionResult> AddOrUpdateSchedule([FromBody] Schedule schedule)
         {
-            if (id != updatedSchedule.Id)
-                return BadRequest("ID расписания не совпадают.");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            try
+            var existingSchedule = await _context.Schedules
+                .FirstOrDefaultAsync(s => s.SpecialistId == schedule.SpecialistId && s.Day == schedule.Day);
+
+            if (existingSchedule != null)
             {
-                var existingSchedule = await _context.Schedules.FindAsync(id);
-                if (existingSchedule == null)
-                    return NotFound("Расписание не найдено.");
-
-                existingSchedule.Day = updatedSchedule.Day;
-                existingSchedule.WorkingHours = updatedSchedule.WorkingHours;
-                existingSchedule.BookedIntervals = updatedSchedule.BookedIntervals;
-
-                await _context.SaveChangesAsync();
-                return Ok(existingSchedule);
+                existingSchedule.WorkingHours = schedule.WorkingHours;
+                existingSchedule.BookedIntervals = schedule.BookedIntervals;
             }
-            catch (Exception ex)
+            else
             {
-                return StatusCode(500, $"Ошибка при обновлении расписания: {ex.Message}");
+                _context.Schedules.Add(schedule);
             }
+
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "Расписание успешно обновлено." });
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateSchedule(int id, [FromBody] Schedule updatedSchedule)
+        {
+            var schedule = await _context.Schedules.FindAsync(id);
+
+            if (schedule == null)
+            {
+                return NotFound(new { message = "Расписание не найдено." });
+            }
+
+            schedule.WorkingHours = updatedSchedule.WorkingHours;
+            schedule.BreakDuration = updatedSchedule.BreakDuration;
+            schedule.Day = updatedSchedule.Day;
+
+            _context.Schedules.Update(schedule);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Расписание обновлено." });
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSchedule(int id)
         {
-            try
-            {
-                var schedule = await _context.Schedules.FindAsync(id);
-                if (schedule == null)
-                {
-                    return NotFound("Расписание не найдено.");
-                }
+            var schedule = await _context.Schedules.FindAsync(id);
 
-                _context.Schedules.Remove(schedule);
-                await _context.SaveChangesAsync();
-
-                return NoContent();
-            }
-            catch (Exception ex)
+            if (schedule == null)
             {
-                return StatusCode(500, $"Ошибка при удалении расписания: {ex.Message}");
+                return NotFound(new { message = "Расписание не найдено." });
             }
+
+            _context.Schedules.Remove(schedule);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Расписание удалено." });
         }
     }
 }

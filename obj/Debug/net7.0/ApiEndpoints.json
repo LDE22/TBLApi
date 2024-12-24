@@ -1,7 +1,7 @@
 [
   {
     "ContainingType": "TBLApi.Controllers.BookingController",
-    "Method": "BookService",
+    "Method": "AddBooking",
     "RelativePath": "api/Booking/book",
     "HttpMethod": "POST",
     "IsController": true,
@@ -33,14 +33,30 @@
   },
   {
     "ContainingType": "TBLApi.Controllers.BookingController",
-    "Method": "GetSpecialistOrders",
-    "RelativePath": "api/Booking/specialist/{id}",
+    "Method": "GetSpecialistSchedule",
+    "RelativePath": "api/Booking/specialist/{id}/schedule",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.BookingController",
+    "Method": "GetBookingsBySpecialist",
+    "RelativePath": "api/Booking/specialist/{specialistId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "specialistId",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -176,9 +192,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "TBLApi.Controllers.ReviewsController",
+    "ContainingType": "TBLApi.Controllers.ReviewController",
     "Method": "AddReview",
-    "RelativePath": "api/Reviews/add",
+    "RelativePath": "api/Review",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -192,9 +208,25 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "TBLApi.Controllers.ReviewsController",
-    "Method": "GetReviews",
-    "RelativePath": "api/Reviews/specialist/{specialistId}",
+    "ContainingType": "TBLApi.Controllers.ReviewController",
+    "Method": "DeleteReview",
+    "RelativePath": "api/Review/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.ReviewController",
+    "Method": "GetReviewsBySpecialist",
+    "RelativePath": "api/Review/{specialistId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -209,7 +241,7 @@
   },
   {
     "ContainingType": "TBLApi.Controllers.ScheduleController",
-    "Method": "AddSchedule",
+    "Method": "AddOrUpdateSchedule",
     "RelativePath": "api/Schedule",
     "HttpMethod": "POST",
     "IsController": true,
@@ -262,7 +294,7 @@
   },
   {
     "ContainingType": "TBLApi.Controllers.ScheduleController",
-    "Method": "GetSchedule",
+    "Method": "GetScheduleBySpecialist",
     "RelativePath": "api/Schedule/{specialistId}",
     "HttpMethod": "GET",
     "IsController": true,
@@ -493,6 +525,43 @@
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.UsersController",
+    "Method": "GetLocation",
+    "RelativePath": "api/Users/{id}/location",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.UsersController",
+    "Method": "UpdateLocation",
+    "RelativePath": "api/Users/{id}/update-location",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "TBLApi.Models.LocationUpdateRequest",
         "IsRequired": true
       }
     ],

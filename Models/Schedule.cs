@@ -12,5 +12,6 @@ namespace TBLApi.Models
         public DateTime Day { get; set; } // Убедитесь, что это DateTime, если клиент отправляет дату
         public string WorkingHours { get; set; }
         public string BookedIntervals { get; set; }
+        public int BreakDuration { get; set; } // Добавить в модель Schedule
     }
 }

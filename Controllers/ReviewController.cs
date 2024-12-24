@@ -5,42 +5,48 @@ using TBLApi.Models;
 
 namespace TBLApi.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class ReviewsController : ControllerBase
+    [Route("api/[controller]")]
+    public class ReviewController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public ReviewsController(AppDbContext context)
+        public ReviewController(AppDbContext context)
         {
             _context = context;
         }
 
-        // Добавить отзыв
-        [HttpPost("add")]
+        // Добавление нового отзыва
+        [HttpPost]
         public async Task<IActionResult> AddReview([FromBody] Review review)
         {
-            if (string.IsNullOrWhiteSpace(review.Content))
-            {
-                return BadRequest(new { message = "Review content is required." });
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
+            review.CreatedAt = DateTime.UtcNow;
             _context.Reviews.Add(review);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Review added successfully.", data = review });
+            return Ok(new { message = "Отзыв успешно добавлен." });
         }
-
-        // Получить отзывы специалиста
-        [HttpGet("specialist/{specialistId}")]
-        public async Task<IActionResult> GetReviews(int specialistId)
+        // Получение отзывов по специалисту
+        [HttpGet("{specialistId}")]
+        public async Task<IActionResult> GetReviewsBySpecialist(int specialistId)
         {
             var reviews = await _context.Reviews
                 .Where(r => r.SpecialistId == specialistId)
                 .ToListAsync();
+            return Ok(reviews);
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteReview(int id)
+        {
+            var review = await _context.Reviews.FindAsync(id);
+            if (review == null) return NotFound(new { message = "Отзыв не найден." });
 
-            return Ok(new { data = reviews });
+            _context.Reviews.Remove(review);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Отзыв успешно удален." });
         }
     }
-
 }

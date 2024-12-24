@@ -36,14 +36,14 @@
         }
       }
     },
-    "/api/Booking/specialist/{id}": {
+    "/api/Booking/specialist/{specialistId}": {
       "get": {
         "tags": [
           "Booking"
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "specialistId",
             "in": "path",
             "required": true,
             "schema": {
@@ -67,6 +67,29 @@
         "parameters": [
           {
             "name": "clientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Booking/specialist/{id}/schedule": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "parameters": [
+          {
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -290,10 +313,10 @@
         }
       }
     },
-    "/api/Reviews/add": {
+    "/api/Review": {
       "post": {
         "tags": [
-          "Reviews"
+          "Review"
         ],
         "requestBody": {
           "content": {
@@ -321,14 +344,37 @@
         }
       }
     },
-    "/api/Reviews/specialist/{specialistId}": {
+    "/api/Review/{specialistId}": {
       "get": {
         "tags": [
-          "Reviews"
+          "Review"
         ],
         "parameters": [
           {
             "name": "specialistId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Review/{id}": {
+      "delete": {
+        "tags": [
+          "Review"
+        ],
+        "parameters": [
+          {
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1250,11 +1296,84 @@
           }
         }
       }
+    },
+    "/api/Users/{id}/update-location": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocationUpdateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocationUpdateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocationUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Users/{id}/location": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
       "Booking": {
+        "required": [
+          "clientId",
+          "day",
+          "endTime",
+          "serviceId",
+          "specialistId",
+          "startTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1265,27 +1384,38 @@
             "type": "integer",
             "format": "int32"
           },
+          "specialist": {
+            "$ref": "#/components/schemas/User"
+          },
           "clientId": {
             "type": "integer",
             "format": "int32"
+          },
+          "client": {
+            "$ref": "#/components/schemas/User"
           },
           "serviceId": {
             "type": "integer",
             "format": "int32"
           },
+          "service": {
+            "$ref": "#/components/schemas/ServiceModel"
+          },
           "day": {
             "type": "string",
             "format": "date-time"
           },
+          "startTime": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-span"
+          },
           "timeInterval": {
             "type": "string",
             "nullable": true
-          },
-          "service": {
-            "$ref": "#/components/schemas/ServiceModel"
-          },
-          "client": {
-            "$ref": "#/components/schemas/User"
           }
         },
         "additionalProperties": false
@@ -1346,6 +1476,24 @@
           },
           "service": {
             "$ref": "#/components/schemas/ServiceModel"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocationUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1477,14 +1625,20 @@
             "type": "string",
             "nullable": true
           },
+          "rating": {
+            "maximum": 5,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
           },
-          "client": {
+          "specialist": {
             "$ref": "#/components/schemas/User"
           },
-          "specialist": {
+          "client": {
             "$ref": "#/components/schemas/User"
           }
         },
@@ -1512,6 +1666,10 @@
           "bookedIntervals": {
             "type": "string",
             "nullable": true
+          },
+          "breakDuration": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1706,6 +1864,18 @@
           "passwordResetExpiration": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "address": {
+            "type": "string",
             "nullable": true
           },
           "reviews": {
