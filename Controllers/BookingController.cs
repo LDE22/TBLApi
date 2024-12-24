@@ -22,6 +22,9 @@ namespace TBLApi.Controllers
         {
             try
             {
+                Console.WriteLine($"Запрос на бронирование: {JsonSerializer.Serialize(request)}");
+
+                // Поиск расписания
                 var schedule = await _context.Schedules
                     .FirstOrDefaultAsync(s => s.SpecialistId == request.SpecialistId && s.Day == request.Day);
 
@@ -30,23 +33,31 @@ namespace TBLApi.Controllers
                     return NotFound(new { message = "Расписание не найдено." });
                 }
 
+                // Проверка пересечений
                 var newInterval = (Start: request.StartTime, End: request.EndTime);
-
-                // Проверяем пересечения с забронированными интервалами
                 if (schedule.BookedIntervalsList.Any(booked => booked.Start < newInterval.End && booked.End > newInterval.Start))
                 {
                     return Conflict(new { message = "Время уже занято." });
                 }
 
-                // Добавляем новый интервал
-                schedule.BookedIntervalsList.Add(newInterval);
-                _context.Schedules.Update(schedule);
+                // Создание записи
+                var booking = new Booking
+                {
+                    SpecialistId = request.SpecialistId,
+                    ClientId = request.ClientId,
+                    ServiceId = request.ServiceId,
+                    Day = request.Day,
+                    TimeInterval = $"{request.StartTime:hh\\:mm}-{request.EndTime:hh\\:mm}"
+                };
+
+                _context.Bookings.Add(booking);
                 await _context.SaveChangesAsync();
 
                 return Ok(new { message = "Время успешно забронировано." });
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Ошибка: {ex.Message}");
                 return StatusCode(500, new { message = $"Ошибка при бронировании времени: {ex.Message}" });
             }
         }
@@ -55,8 +66,9 @@ namespace TBLApi.Controllers
         {
             public int ClientId { get; set; }
             public int SpecialistId { get; set; }
+            public int ServiceId { get; set; }
             public DateOnly Day { get; set; } // Чистая дата
-            public TimeSpan StartTime { get; set; }
+            public TimeSpan StartTime { get; set; } // Начало бронирования
             public TimeSpan EndTime { get; set; }
         }
 
@@ -79,8 +91,6 @@ namespace TBLApi.Controllers
                     b.ServiceId,
                     b.Day,
                     b.TimeInterval,
-                    StartTime = ParseTimeInterval(b.TimeInterval).Start,
-                    EndTime = ParseTimeInterval(b.TimeInterval).End
                 });
 
                 return Ok(result);
@@ -104,8 +114,7 @@ namespace TBLApi.Controllers
                         b.Service.Title,
                         b.Service.Description,
                         b.Day,
-                        StartTime = ParseTimeInterval(b.TimeInterval).Start,
-                        EndTime = ParseTimeInterval(b.TimeInterval).End
+                        b.TimeInterval
                     })
                     .ToListAsync();
 
@@ -115,19 +124,6 @@ namespace TBLApi.Controllers
             {
                 return StatusCode(500, new { message = $"Ошибка при получении встреч: {ex.Message}" });
             }
-        }
-
-        private static (TimeSpan Start, TimeSpan End) ParseTimeInterval(string timeInterval)
-        {
-            var parts = timeInterval.Split('-');
-            if (parts.Length == 2 &&
-                TimeSpan.TryParse(parts[0].Trim(), out var start) &&
-                TimeSpan.TryParse(parts[1].Trim(), out var end))
-            {
-                return (start, end);
-            }
-
-            throw new FormatException("TimeInterval имеет неверный формат. Ожидался формат 'HH:mm - HH:mm'.");
         }
     }
 }
