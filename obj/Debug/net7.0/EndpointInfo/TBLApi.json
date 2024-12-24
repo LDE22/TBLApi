@@ -10,16 +10,6 @@
         "tags": [
           "Booking"
         ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1414,6 +1404,10 @@
       "BookingRequest": {
         "type": "object",
         "properties": {
+          "specialistId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "day": {
             "type": "string",
             "format": "date-time"

@@ -8,11 +8,6 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
         "Name": "request",
         "Type": "TBLApi.Controllers.BookingController\u002BBookingRequest",
         "IsRequired": true

@@ -18,21 +18,23 @@ namespace TBLApi.Controllers
         }
 
         [HttpPost("book")]
-        public async Task<IActionResult> BookTime(int id, [FromBody] BookingRequest request)
+        public async Task<IActionResult> BookTime([FromBody] BookingRequest request)
         {
             try
             {
+                // Проверяем существование расписания по SpecialistId и дате
                 var schedule = await _context.Schedules
-                    .FirstOrDefaultAsync(s => s.SpecialistId == id && s.Day.Date == request.Day.Date);
+                    .FirstOrDefaultAsync(s => s.SpecialistId == request.SpecialistId && s.Day.Date == request.Day.Date);
 
                 if (schedule == null)
                 {
                     return NotFound(new { message = "Расписание не найдено." });
                 }
 
+                // Создаем новый интервал
                 var newInterval = (Start: request.StartTime, End: request.EndTime);
 
-                // Проверка пересечений
+                // Проверка пересечений с уже забронированными интервалами
                 foreach (var booked in schedule.BookedIntervalsList)
                 {
                     if (booked.Start < newInterval.End && booked.End > newInterval.Start)
@@ -41,9 +43,10 @@ namespace TBLApi.Controllers
                     }
                 }
 
-                // Добавляем новое забронированное время
+                // Добавляем новый интервал в список забронированных
                 schedule.BookedIntervalsList.Add(newInterval);
 
+                // Обновляем запись расписания
                 _context.Schedules.Update(schedule);
                 await _context.SaveChangesAsync();
 
@@ -51,8 +54,16 @@ namespace TBLApi.Controllers
             }
             catch (Exception ex)
             {
+                // Возвращаем ошибку сервера
                 return StatusCode(500, new { message = $"Ошибка при бронировании времени: {ex.Message}" });
             }
+        }
+        public class BookingRequest
+        {
+            public int SpecialistId { get; set; } // ID специалиста
+            public DateTime Day { get; set; } // Дата бронирования
+            public TimeSpan StartTime { get; set; } // Начало бронирования
+            public TimeSpan EndTime { get; set; } // Конец бронирования
         }
 
         [HttpGet("specialist/{specialistId}")]
@@ -159,13 +170,6 @@ namespace TBLApi.Controllers
             }
 
             throw new FormatException("TimeInterval имеет неверный формат. Ожидался формат 'HH:mm - HH:mm'.");
-        }
-
-        public class BookingRequest
-        {
-            public DateTime Day { get; set; }
-            public TimeSpan StartTime { get; set; }
-            public TimeSpan EndTime { get; set; }
         }
     }
 }
