@@ -18,87 +18,110 @@ namespace TBLApi.Controllers
         }
 
         [HttpPost("book")]
-        public async Task<IActionResult> AddBooking([FromBody] Booking booking)
+        public async Task<IActionResult> BookTime(int id, [FromBody] BookingRequest request)
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(booking.TimeInterval))
+                var schedule = await _context.Schedules
+                    .FirstOrDefaultAsync(s => s.SpecialistId == id && s.Day.Date == request.Day.Date);
+
+                if (schedule == null)
                 {
-                    var times = ParseTimeInterval(booking.TimeInterval);
-                    booking.StartTime = times.StartTime;
-                    booking.EndTime = times.EndTime;
+                    return NotFound(new { message = "Расписание не найдено." });
                 }
 
-                _context.Bookings.Add(booking);
+                var newInterval = (Start: request.StartTime, End: request.EndTime);
+
+                // Проверка пересечений
+                foreach (var booked in schedule.BookedIntervalsList)
+                {
+                    if (booked.Start < newInterval.End && booked.End > newInterval.Start)
+                    {
+                        return Conflict(new { message = "Время уже занято." });
+                    }
+                }
+
+                // Добавляем новое забронированное время
+                schedule.BookedIntervalsList.Add(newInterval);
+
+                _context.Schedules.Update(schedule);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { message = "Запись успешно создана." });
-            }
-            catch (FormatException ex)
-            {
-                return BadRequest(new { message = ex.Message });
+                return Ok(new { message = "Время успешно забронировано." });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Ошибка: {ex.Message}");
+                return StatusCode(500, new { message = $"Ошибка при бронировании времени: {ex.Message}" });
             }
         }
 
         [HttpGet("specialist/{specialistId}")]
         public async Task<IActionResult> GetBookingsBySpecialist(int specialistId)
         {
-            // Извлекаем данные из базы только с доступными полями
-            var bookings = await _context.Bookings
-                .Where(b => b.SpecialistId == specialistId)
-                .Include(b => b.Service)
-                .Include(b => b.Client)
-                .Select(b => new
-                {
-                    b.Id,
-                    b.SpecialistId,
-                    b.ClientId,
-                    b.ServiceId,
-                    b.Day,
-                    b.TimeInterval // Извлекаем TimeInterval из базы
-                })
-                .ToListAsync();
-
-            // Обрабатываем TimeInterval для извлечения StartTime и EndTime
-            var result = bookings.Select(b =>
+            try
             {
-                var times = ParseTimeInterval(b.TimeInterval);
-                return new
-                {
-                    b.Id,
-                    b.SpecialistId,
-                    b.ClientId,
-                    b.ServiceId,
-                    b.Day,
-                    b.TimeInterval,
-                    StartTime = times.StartTime, // Извлекаем StartTime
-                    EndTime = times.EndTime      // Извлекаем EndTime
-                };
-            });
+                var bookings = await _context.Bookings
+                    .Where(b => b.SpecialistId == specialistId)
+                    .Include(b => b.Service)
+                    .Include(b => b.Client)
+                    .Select(b => new
+                    {
+                        b.Id,
+                        b.SpecialistId,
+                        b.ClientId,
+                        b.ServiceId,
+                        b.Day,
+                        b.TimeInterval
+                    })
+                    .ToListAsync();
 
-            return Ok(result);
+                var result = bookings.Select(b =>
+                {
+                    var times = ParseTimeInterval(b.TimeInterval);
+                    return new
+                    {
+                        b.Id,
+                        b.SpecialistId,
+                        b.ClientId,
+                        b.ServiceId,
+                        b.Day,
+                        b.TimeInterval,
+                        StartTime = times.Start,
+                        EndTime = times.End
+                    };
+                });
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Ошибка при получении бронирований: {ex.Message}" });
+            }
         }
 
         [HttpGet("client/{clientId}")]
         public async Task<IActionResult> GetClientMeetings(int clientId)
         {
-            var meetings = await _context.Bookings
-                .Where(b => b.ClientId == clientId)
-                .Select(b => new
-                {
-                    Title = b.Service.Title,
-                    Description = b.Service.Description,
-                    Day = b.Day,
-                    StartTime = b.StartTime,
-                    EndTime = b.EndTime
-                })
-                .ToListAsync();
+            try
+            {
+                var meetings = await _context.Bookings
+                    .Where(b => b.ClientId == clientId)
+                    .Select(b => new
+                    {
+                        b.Service.Title,
+                        b.Service.Description,
+                        b.Day,
+                        StartTime = ParseTimeInterval(b.TimeInterval).Start,
+                        EndTime = ParseTimeInterval(b.TimeInterval).End
+                    })
+                    .ToListAsync();
 
-            return Ok(meetings);
+                return Ok(meetings);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Ошибка при получении встреч: {ex.Message}" });
+            }
         }
 
         [HttpGet("specialist/{id}/schedule")]
@@ -111,7 +134,7 @@ namespace TBLApi.Controllers
                     .Select(s => new
                     {
                         s.Id,
-                        s.WorkingHours,
+                        WorkingHours = s.WorkingHoursList, // Используем виртуальное свойство
                         s.BreakDuration,
                         s.Day
                     })
@@ -121,10 +144,11 @@ namespace TBLApi.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Ошибка при получении расписания: {ex.Message}");
+                return StatusCode(500, new { message = $"Ошибка при получении расписания: {ex.Message}" });
             }
         }
-        private static (TimeSpan StartTime, TimeSpan EndTime) ParseTimeInterval(string timeInterval)
+
+        private static (TimeSpan Start, TimeSpan End) ParseTimeInterval(string timeInterval)
         {
             var parts = timeInterval.Split('-');
             if (parts.Length == 2 &&
@@ -135,6 +159,13 @@ namespace TBLApi.Controllers
             }
 
             throw new FormatException("TimeInterval имеет неверный формат. Ожидался формат 'HH:mm - HH:mm'.");
+        }
+
+        public class BookingRequest
+        {
+            public DateTime Day { get; set; }
+            public TimeSpan StartTime { get; set; }
+            public TimeSpan EndTime { get; set; }
         }
     }
 }

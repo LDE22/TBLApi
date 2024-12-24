@@ -17,19 +17,13 @@ public class ServicesController : ControllerBase
     [HttpPost("add")]
     public async Task<IActionResult> AddService([FromBody] ServiceModel service)
     {
-        var specialist = await _context.Users.FindAsync(service.SpecialistId);
-        if (specialist == null)
-        {
-            return BadRequest(new { message = "Specialist not found." });
-        }
-
-        // Привязка города к услуге
-        service.City = specialist.City;
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
         _context.Services.Add(service);
         await _context.SaveChangesAsync();
 
-        return Ok(new { message = "Service added successfully." });
+        return Ok(new { message = "Услуга добавлена.", service });
     }
 
     [HttpPut("update-service/{id}")]

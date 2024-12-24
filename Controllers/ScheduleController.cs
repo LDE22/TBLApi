@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 using TBLApi.Data;
 using TBLApi.Models;
 
@@ -29,57 +28,78 @@ namespace TBLApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddOrUpdateSchedule([FromBody] Schedule schedule)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var existingSchedule = await _context.Schedules
-                .FirstOrDefaultAsync(s => s.SpecialistId == schedule.SpecialistId && s.Day == schedule.Day);
-
-            if (existingSchedule != null)
+            try
             {
-                existingSchedule.WorkingHours = schedule.WorkingHours;
-                existingSchedule.BookedIntervals = schedule.BookedIntervals;
-            }
-            else
-            {
-                _context.Schedules.Add(schedule);
-            }
+                // Преобразуем дату в UTC
+                if (schedule.Day.Kind == DateTimeKind.Unspecified)
+                {
+                    schedule.Day = DateTime.SpecifyKind(schedule.Day, DateTimeKind.Utc);
+                }
 
-            await _context.SaveChangesAsync();
-            return Ok(new { message = "Расписание успешно обновлено." });
+                var existingSchedule = await _context.Schedules
+                    .FirstOrDefaultAsync(s => s.SpecialistId == schedule.SpecialistId && s.Day == schedule.Day);
+
+                if (existingSchedule != null)
+                {
+                    existingSchedule.StartTime = schedule.StartTime;
+                    existingSchedule.EndTime = schedule.EndTime;
+                    existingSchedule.BreakDuration = schedule.BreakDuration;
+                }
+                else
+                {
+                    _context.Schedules.Add(schedule);
+                }
+
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Расписание успешно обновлено." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ошибка при добавлении или обновлении расписания: {ex.Message}");
+            }
         }
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSchedule(int id, [FromBody] Schedule updatedSchedule)
-        {
-            var schedule = await _context.Schedules.FindAsync(id);
 
-            if (schedule == null)
-            {
-                return NotFound(new { message = "Расписание не найдено." });
-            }
-
-            schedule.WorkingHours = updatedSchedule.WorkingHours;
-            schedule.BreakDuration = updatedSchedule.BreakDuration;
-            schedule.Day = updatedSchedule.Day;
-
-            _context.Schedules.Update(schedule);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Расписание обновлено." });
-        }
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSchedule(int id)
         {
             var schedule = await _context.Schedules.FindAsync(id);
 
             if (schedule == null)
-            {
                 return NotFound(new { message = "Расписание не найдено." });
-            }
 
             _context.Schedules.Remove(schedule);
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Расписание удалено." });
         }
+        [HttpGet("specialist/{id}/available-intervals")]
+        public async Task<IActionResult> GetAvailableIntervals(int id)
+        {
+            try
+            {
+                var schedule = await _context.Schedules
+                    .Where(s => s.SpecialistId == id)
+                    .ToListAsync();
+
+                if (!schedule.Any())
+                    return NotFound(new { message = "Расписание не найдено." });
+
+                var availableIntervals = schedule.Select(s => new
+                {
+                    s.Day,
+                    s.StartTime,
+                    s.EndTime,
+                    s.BreakDuration,
+                    AvailableIntervals = s.AvailableIntervals // Доступные интервалы
+                });
+
+                return Ok(availableIntervals);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ошибка при получении интервалов: {ex.Message}");
+            }
+        }
+
     }
 }

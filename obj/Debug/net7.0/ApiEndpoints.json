@@ -1,15 +1,20 @@
 [
   {
     "ContainingType": "TBLApi.Controllers.BookingController",
-    "Method": "AddBooking",
+    "Method": "BookTime",
     "RelativePath": "api/Booking/book",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "booking",
-        "Type": "TBLApi.Models.Booking",
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "request",
+        "Type": "TBLApi.Controllers.BookingController\u002BBookingRequest",
         "IsRequired": true
       }
     ],
@@ -257,27 +262,6 @@
   },
   {
     "ContainingType": "TBLApi.Controllers.ScheduleController",
-    "Method": "UpdateSchedule",
-    "RelativePath": "api/Schedule/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "updatedSchedule",
-        "Type": "TBLApi.Models.Schedule",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TBLApi.Controllers.ScheduleController",
     "Method": "DeleteSchedule",
     "RelativePath": "api/Schedule/{id}",
     "HttpMethod": "DELETE",
@@ -302,6 +286,22 @@
     "Parameters": [
       {
         "Name": "specialistId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.ScheduleController",
+    "Method": "GetAvailableIntervals",
+    "RelativePath": "api/Schedule/specialist/{id}/available-intervals",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
       }

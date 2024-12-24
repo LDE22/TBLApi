@@ -11,6 +11,7 @@ namespace TBLApi.Models
         public int SpecialistId { get; set; }
         public string City { get; set; }
         public string SpecialistName { get; set; }
+        public int Duration { get; set; }
 
 
         [Required]

@@ -10,21 +10,31 @@
         "tags": [
           "Booking"
         ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Booking"
+                "$ref": "#/components/schemas/BookingRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Booking"
+                "$ref": "#/components/schemas/BookingRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Booking"
+                "$ref": "#/components/schemas/BookingRequest"
               }
             }
           }
@@ -445,7 +455,7 @@
       }
     },
     "/api/Schedule/{id}": {
-      "put": {
+      "delete": {
         "tags": [
           "Schedule"
         ],
@@ -460,32 +470,15 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Schedule"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Schedule"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Schedule"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK"
           }
         }
-      },
-      "delete": {
+      }
+    },
+    "/api/Schedule/specialist/{id}/available-intervals": {
+      "get": {
         "tags": [
           "Schedule"
         ],
@@ -1418,6 +1411,24 @@
         },
         "additionalProperties": false
       },
+      "BookingRequest": {
+        "type": "object",
+        "properties": {
+          "day": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-span"
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateChatRequest": {
         "type": "object",
         "properties": {
@@ -1657,17 +1668,47 @@
             "type": "string",
             "format": "date-time"
           },
-          "workingHours": {
+          "startTime": {
             "type": "string",
-            "nullable": true
+            "format": "date-span"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "breakDuration": {
+            "type": "integer",
+            "format": "int32"
           },
           "bookedIntervals": {
             "type": "string",
             "nullable": true
           },
-          "breakDuration": {
-            "type": "integer",
-            "format": "int32"
+          "workingHours": {
+            "type": "string",
+            "nullable": true
+          },
+          "workingHoursList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimeSpanTimeSpanValueTuple"
+            },
+            "nullable": true
+          },
+          "bookedIntervalsList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimeSpanTimeSpanValueTuple"
+            },
+            "nullable": true
+          },
+          "availableIntervals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimeSpanTimeSpanValueTuple"
+            },
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -1706,6 +1747,10 @@
           "specialistName": {
             "type": "string",
             "nullable": true
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int32"
           },
           "reviews": {
             "type": "array",
@@ -1765,6 +1810,10 @@
             "nullable": true
           }
         },
+        "additionalProperties": false
+      },
+      "TimeSpanTimeSpanValueTuple": {
+        "type": "object",
         "additionalProperties": false
       },
       "UpdateProfileModel": {
