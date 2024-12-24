@@ -23,7 +23,7 @@ namespace TBLApi.Controllers
             try
             {
                 var schedule = await _context.Schedules
-                    .FirstOrDefaultAsync(s => s.SpecialistId == request.SpecialistId && s.Day.Date == request.Day.Date);
+                    .FirstOrDefaultAsync(s => s.SpecialistId == request.SpecialistId && s.Day == request.Day);
 
                 if (schedule == null)
                 {
@@ -50,14 +50,16 @@ namespace TBLApi.Controllers
                 return StatusCode(500, new { message = $"Ошибка при бронировании времени: {ex.Message}" });
             }
         }
+
         public class BookingRequest
         {
             public int ClientId { get; set; }
-            public int SpecialistId { get; set; } // ID специалиста
-            public DateTime Day { get; set; } // Дата бронирования
-            public TimeSpan StartTime { get; set; } // Начало бронирования
-            public TimeSpan EndTime { get; set; } // Конец бронирования
+            public int SpecialistId { get; set; }
+            public DateOnly Day { get; set; } // Чистая дата
+            public TimeSpan StartTime { get; set; }
+            public TimeSpan EndTime { get; set; }
         }
+
         [HttpGet("specialist/{specialistId}")]
         public async Task<IActionResult> GetBookingsBySpecialist(int specialistId)
         {

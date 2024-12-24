@@ -7,12 +7,12 @@ namespace TBLApi.Models
     {
         public int Id { get; set; }
         public int SpecialistId { get; set; }
-        public DateTime Day { get; set; } // Убедитесь, что клиент передаёт дату в ISO 8601 формате
+        public DateOnly Day { get; set; } // Убедитесь, что клиент передаёт дату в ISO 8601 формате
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
         public int BreakDuration { get; set; }
         [NotMapped]
-        public string BookedIntervals { get; set; } = "[]";// Занятые интервалы в формате JSON
+        public string BookedIntervals { get; set; } // JSON-строка
         [NotMapped]
         public string WorkingHours { get; set; } = "[]";
 
@@ -51,10 +51,11 @@ namespace TBLApi.Models
         public List<(TimeSpan Start, TimeSpan End)> BookedIntervalsList
         {
             get => string.IsNullOrEmpty(BookedIntervals)
-                ? new List<(TimeSpan Start, TimeSpan End)>()
+                ? new List<(TimeSpan, TimeSpan)>()
                 : JsonSerializer.Deserialize<List<(TimeSpan Start, TimeSpan End)>>(BookedIntervals);
             set => BookedIntervals = JsonSerializer.Serialize(value);
         }
+
 
         [NotMapped]
         public List<(TimeSpan Start, TimeSpan End)> AvailableIntervals
