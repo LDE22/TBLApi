@@ -1369,10 +1369,8 @@
         "required": [
           "clientId",
           "day",
-          "endTime",
           "serviceId",
-          "specialistId",
-          "startTime"
+          "specialistId"
         ],
         "type": "object",
         "properties": {

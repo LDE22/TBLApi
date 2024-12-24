@@ -12,27 +12,30 @@ namespace TBLApi.Models
         public int SpecialistId { get; set; }
 
         [ForeignKey("SpecialistId")]
+        [NotMapped]
         public virtual User Specialist { get; set; }
 
         [Required]
         public int ClientId { get; set; }
 
         [ForeignKey("ClientId")]
+        [NotMapped]
         public virtual User Client { get; set; }
 
         [Required]
         public int ServiceId { get; set; }
 
         [ForeignKey("ServiceId")]
+        [NotMapped]
         public virtual ServiceModel Service { get; set; }
 
         [Required]
         public DateTime Day { get; set; }
 
-        [Required]
+        [NotMapped]
         public TimeSpan StartTime { get; set; }
 
-        [Required]
+        [NotMapped]
         public TimeSpan EndTime { get; set; }
 
         [NotMapped]

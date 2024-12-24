@@ -20,41 +20,67 @@ namespace TBLApi.Controllers
         [HttpPost("book")]
         public async Task<IActionResult> AddBooking([FromBody] Booking booking)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            // Проверка доступности времени
-            var schedule = await _context.Schedules
-                .FirstOrDefaultAsync(s => s.SpecialistId == booking.SpecialistId && s.Day.Date == booking.Day.Date);
-
-            if (schedule == null) return BadRequest(new { message = "Расписание на выбранную дату не найдено." });
-
-            var bookedIntervals = JsonSerializer.Deserialize<List<string>>(schedule.BookedIntervals) ?? new List<string>();
-
-            var bookingInterval = $"{booking.StartTime}-{booking.EndTime}";
-
-            if (bookedIntervals.Contains(bookingInterval))
+            try
             {
-                return BadRequest(new { message = "Выбранное время уже занято." });
+                if (!string.IsNullOrWhiteSpace(booking.TimeInterval))
+                {
+                    var times = ParseTimeInterval(booking.TimeInterval);
+                    booking.StartTime = times.StartTime;
+                    booking.EndTime = times.EndTime;
+                }
+
+                _context.Bookings.Add(booking);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Запись успешно создана." });
             }
-
-            bookedIntervals.Add(bookingInterval);
-            schedule.BookedIntervals = JsonSerializer.Serialize(bookedIntervals);
-
-            _context.Bookings.Add(booking);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Запись успешно создана." });
+            catch (FormatException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ошибка: {ex.Message}");
+            }
         }
 
         [HttpGet("specialist/{specialistId}")]
         public async Task<IActionResult> GetBookingsBySpecialist(int specialistId)
         {
+            // Извлекаем данные из базы только с доступными полями
             var bookings = await _context.Bookings
                 .Where(b => b.SpecialistId == specialistId)
                 .Include(b => b.Service)
                 .Include(b => b.Client)
+                .Select(b => new
+                {
+                    b.Id,
+                    b.SpecialistId,
+                    b.ClientId,
+                    b.ServiceId,
+                    b.Day,
+                    b.TimeInterval // Извлекаем TimeInterval из базы
+                })
                 .ToListAsync();
-            return Ok(bookings);
+
+            // Обрабатываем TimeInterval для извлечения StartTime и EndTime
+            var result = bookings.Select(b =>
+            {
+                var times = ParseTimeInterval(b.TimeInterval);
+                return new
+                {
+                    b.Id,
+                    b.SpecialistId,
+                    b.ClientId,
+                    b.ServiceId,
+                    b.Day,
+                    b.TimeInterval,
+                    StartTime = times.StartTime, // Извлекаем StartTime
+                    EndTime = times.EndTime      // Извлекаем EndTime
+                };
+            });
+
+            return Ok(result);
         }
 
         [HttpGet("client/{clientId}")]
@@ -97,6 +123,18 @@ namespace TBLApi.Controllers
             {
                 return StatusCode(500, $"Ошибка при получении расписания: {ex.Message}");
             }
+        }
+        private static (TimeSpan StartTime, TimeSpan EndTime) ParseTimeInterval(string timeInterval)
+        {
+            var parts = timeInterval.Split('-');
+            if (parts.Length == 2 &&
+                TimeSpan.TryParse(parts[0].Trim(), out var start) &&
+                TimeSpan.TryParse(parts[1].Trim(), out var end))
+            {
+                return (start, end);
+            }
+
+            throw new FormatException("TimeInterval имеет неверный формат. Ожидался формат 'HH:mm - HH:mm'.");
         }
     }
 }
