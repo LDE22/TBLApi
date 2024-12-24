@@ -70,7 +70,7 @@ public class ServicesController : ControllerBase
             }
 
             // Вызов функции каскадного удаления
-            await _context.Database.ExecuteSqlInterpolatedAsync($"SELECT delete_service({id})");
+            await _context.Database.ExecuteSqlInterpolatedAsync($"SELECT delete_service_cascade({id})");
 
             return Ok(new { message = "Услуга успешно удалена." });
         }
