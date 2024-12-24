@@ -82,29 +82,6 @@
         }
       }
     },
-    "/api/Booking/specialist/{id}/schedule": {
-      "get": {
-        "tags": [
-          "Booking"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/Chats/create": {
       "post": {
         "tags": [
@@ -1404,6 +1381,10 @@
       "BookingRequest": {
         "type": "object",
         "properties": {
+          "clientId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "specialistId": {
             "type": "integer",
             "format": "int32"

@@ -33,22 +33,6 @@
   },
   {
     "ContainingType": "TBLApi.Controllers.BookingController",
-    "Method": "GetSpecialistSchedule",
-    "RelativePath": "api/Booking/specialist/{id}/schedule",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TBLApi.Controllers.BookingController",
     "Method": "GetBookingsBySpecialist",
     "RelativePath": "api/Booking/specialist/{specialistId}",
     "HttpMethod": "GET",

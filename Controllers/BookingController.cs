@@ -22,7 +22,6 @@ namespace TBLApi.Controllers
         {
             try
             {
-                // Проверяем существование расписания по SpecialistId и дате
                 var schedule = await _context.Schedules
                     .FirstOrDefaultAsync(s => s.SpecialistId == request.SpecialistId && s.Day.Date == request.Day.Date);
 
@@ -31,22 +30,16 @@ namespace TBLApi.Controllers
                     return NotFound(new { message = "Расписание не найдено." });
                 }
 
-                // Создаем новый интервал
                 var newInterval = (Start: request.StartTime, End: request.EndTime);
 
-                // Проверка пересечений с уже забронированными интервалами
-                foreach (var booked in schedule.BookedIntervalsList)
+                // Проверяем пересечения с забронированными интервалами
+                if (schedule.BookedIntervalsList.Any(booked => booked.Start < newInterval.End && booked.End > newInterval.Start))
                 {
-                    if (booked.Start < newInterval.End && booked.End > newInterval.Start)
-                    {
-                        return Conflict(new { message = "Время уже занято." });
-                    }
+                    return Conflict(new { message = "Время уже занято." });
                 }
 
-                // Добавляем новый интервал в список забронированных
+                // Добавляем новый интервал
                 schedule.BookedIntervalsList.Add(newInterval);
-
-                // Обновляем запись расписания
                 _context.Schedules.Update(schedule);
                 await _context.SaveChangesAsync();
 
@@ -54,18 +47,17 @@ namespace TBLApi.Controllers
             }
             catch (Exception ex)
             {
-                // Возвращаем ошибку сервера
                 return StatusCode(500, new { message = $"Ошибка при бронировании времени: {ex.Message}" });
             }
         }
         public class BookingRequest
         {
+            public int ClientId { get; set; }
             public int SpecialistId { get; set; } // ID специалиста
             public DateTime Day { get; set; } // Дата бронирования
             public TimeSpan StartTime { get; set; } // Начало бронирования
             public TimeSpan EndTime { get; set; } // Конец бронирования
         }
-
         [HttpGet("specialist/{specialistId}")]
         public async Task<IActionResult> GetBookingsBySpecialist(int specialistId)
         {
@@ -75,31 +67,18 @@ namespace TBLApi.Controllers
                     .Where(b => b.SpecialistId == specialistId)
                     .Include(b => b.Service)
                     .Include(b => b.Client)
-                    .Select(b => new
-                    {
-                        b.Id,
-                        b.SpecialistId,
-                        b.ClientId,
-                        b.ServiceId,
-                        b.Day,
-                        b.TimeInterval
-                    })
                     .ToListAsync();
 
-                var result = bookings.Select(b =>
+                var result = bookings.Select(b => new
                 {
-                    var times = ParseTimeInterval(b.TimeInterval);
-                    return new
-                    {
-                        b.Id,
-                        b.SpecialistId,
-                        b.ClientId,
-                        b.ServiceId,
-                        b.Day,
-                        b.TimeInterval,
-                        StartTime = times.Start,
-                        EndTime = times.End
-                    };
+                    b.Id,
+                    b.SpecialistId,
+                    b.ClientId,
+                    b.ServiceId,
+                    b.Day,
+                    b.TimeInterval,
+                    StartTime = ParseTimeInterval(b.TimeInterval).Start,
+                    EndTime = ParseTimeInterval(b.TimeInterval).End
                 });
 
                 return Ok(result);
@@ -117,6 +96,7 @@ namespace TBLApi.Controllers
             {
                 var meetings = await _context.Bookings
                     .Where(b => b.ClientId == clientId)
+                    .Include(b => b.Service)
                     .Select(b => new
                     {
                         b.Service.Title,
@@ -132,30 +112,6 @@ namespace TBLApi.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = $"Ошибка при получении встреч: {ex.Message}" });
-            }
-        }
-
-        [HttpGet("specialist/{id}/schedule")]
-        public async Task<IActionResult> GetSpecialistSchedule(int id)
-        {
-            try
-            {
-                var schedule = await _context.Schedules
-                    .Where(s => s.SpecialistId == id)
-                    .Select(s => new
-                    {
-                        s.Id,
-                        WorkingHours = s.WorkingHoursList, // Используем виртуальное свойство
-                        s.BreakDuration,
-                        s.Day
-                    })
-                    .ToListAsync();
-
-                return Ok(schedule);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = $"Ошибка при получении расписания: {ex.Message}" });
             }
         }
 
