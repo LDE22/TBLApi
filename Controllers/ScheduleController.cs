@@ -30,28 +30,36 @@ namespace TBLApi.Controllers
         {
             try
             {
-                // Преобразуем дату в UTC
-                if (schedule.Day.Kind == DateTimeKind.Unspecified)
-                {
-                    schedule.Day = DateTime.SpecifyKind(schedule.Day, DateTimeKind.Utc);
-                }
+                // Преобразуем `Day` из `DateOnly` в `DateTime` для работы с базой данных
+                var scheduleDate = schedule.Day;
 
                 var existingSchedule = await _context.Schedules
-                    .FirstOrDefaultAsync(s => s.SpecialistId == schedule.SpecialistId && s.Day == schedule.Day);
+                    .FirstOrDefaultAsync(s => s.SpecialistId == schedule.SpecialistId && s.Day == scheduleDate);
 
                 if (existingSchedule != null)
                 {
+                    // Обновляем существующее расписание
                     existingSchedule.StartTime = schedule.StartTime;
                     existingSchedule.EndTime = schedule.EndTime;
                     existingSchedule.BreakDuration = schedule.BreakDuration;
                 }
                 else
                 {
-                    _context.Schedules.Add(schedule);
+                    // Добавляем новое расписание
+                    var newSchedule = new Schedule
+                    {
+                        SpecialistId = schedule.SpecialistId,
+                        Day = scheduleDate, // Сохраняем дату как `DateTime`
+                        StartTime = schedule.StartTime,
+                        EndTime = schedule.EndTime,
+                        BreakDuration = schedule.BreakDuration,
+                        BookedIntervals = schedule.BookedIntervals // Если используется JSON-строка
+                    };
+                    _context.Schedules.Add(newSchedule);
                 }
 
                 await _context.SaveChangesAsync();
-                return Ok(new { message = "Расписание успешно обновлено." });
+                return Ok(new { message = "Расписание успешно добавлено или обновлено." });
             }
             catch (Exception ex)
             {

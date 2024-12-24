@@ -1391,7 +1391,7 @@
           },
           "day": {
             "type": "string",
-            "format": "date-time"
+            "format": "date"
           },
           "startTime": {
             "type": "string",
@@ -1641,7 +1641,7 @@
           },
           "day": {
             "type": "string",
-            "format": "date-time"
+            "format": "date"
           },
           "startTime": {
             "type": "string",
