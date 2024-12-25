@@ -111,10 +111,12 @@ namespace TBLApi.Controllers
                     .Include(b => b.Service)
                     .Select(b => new
                     {
-                        b.Service.Title,
-                        b.Service.Description,
+                        b.Id,
+                        b.SpecialistId,
+                        b.ClientId,
+                        b.ServiceId,
                         b.Day,
-                        b.TimeInterval
+                        b.TimeInterval,
                     })
                     .ToListAsync();
 
