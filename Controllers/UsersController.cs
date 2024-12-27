@@ -294,6 +294,7 @@ namespace TBLApi.Controllers
             }
         }
 
+
         [HttpDelete("{userId}/block")]
         public async Task<IActionResult> DeleteUser(int userId)
         {
@@ -363,14 +364,26 @@ namespace TBLApi.Controllers
         {
             try
             {
+                // Проверяем существование статистики
                 var stats = await _context.ModeratorStatistics
                     .FirstOrDefaultAsync(s => s.ModeratorId == request.ModeratorId);
 
                 if (stats == null)
                 {
-                    return NotFound("Statistics not found");
+                    // Создаём новую статистику, если её нет
+                    stats = new ModeratorStatistic
+                    {
+                        ModeratorId = request.ModeratorId,
+                        BlockedProfiles = 0,
+                        ClosedTickets = 0,
+                        RejectedTickets = 0,
+                        RestrictedProfiles = 0
+                    };
+                    _context.ModeratorStatistics.Add(stats);
+                    await _context.SaveChangesAsync();
                 }
 
+                // Обновляем нужное поле
                 switch (request.Field)
                 {
                     case "BlockedProfiles":
@@ -389,14 +402,16 @@ namespace TBLApi.Controllers
                         return BadRequest("Invalid field");
                 }
 
+                // Сохраняем изменения
                 await _context.SaveChangesAsync();
-                return Ok();
+                return Ok(stats);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Failed to update statistics: {ex.Message}");
             }
         }
+
 
         public class StatisticsUpdateRequest
         {
