@@ -12,7 +12,7 @@ namespace TBLApi.Models
         public TimeSpan EndTime { get; set; }
         public int BreakDuration { get; set; }
         [NotMapped]
-        public string BookedIntervals { get; set; } // JSON-строка
+        public string? BookedIntervals { get; set; } // JSON-строка
         [NotMapped]
         public string WorkingHours { get; set; } = "[]";
 

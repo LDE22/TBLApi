@@ -25,7 +25,7 @@ namespace TBLApi.Controllers
             return Ok(schedule);
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public async Task<IActionResult> AddOrUpdateSchedule([FromBody] Schedule schedule)
         {
             try

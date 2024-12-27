@@ -390,7 +390,7 @@
         }
       }
     },
-    "/api/Schedule": {
+    "/api/Schedule/add": {
       "post": {
         "tags": [
           "Schedule"

@@ -225,22 +225,6 @@
   },
   {
     "ContainingType": "TBLApi.Controllers.ScheduleController",
-    "Method": "AddOrUpdateSchedule",
-    "RelativePath": "api/Schedule",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "schedule",
-        "Type": "TBLApi.Models.Schedule",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TBLApi.Controllers.ScheduleController",
     "Method": "DeleteSchedule",
     "RelativePath": "api/Schedule/{id}",
     "HttpMethod": "DELETE",
@@ -266,6 +250,22 @@
       {
         "Name": "specialistId",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.ScheduleController",
+    "Method": "AddOrUpdateSchedule",
+    "RelativePath": "api/Schedule/add",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "schedule",
+        "Type": "TBLApi.Models.Schedule",
         "IsRequired": true
       }
     ],
