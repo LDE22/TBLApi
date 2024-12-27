@@ -1321,6 +1321,37 @@
           }
         }
       }
+    },
+    "/api/Users/update": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatisticsUpdateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatisticsUpdateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatisticsUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1749,6 +1780,24 @@
               "$ref": "#/components/schemas/Booking"
             },
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "StatisticsUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "moderatorId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "field": {
+            "type": "string",
+            "nullable": true
+          },
+          "incrementBy": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

@@ -744,6 +744,22 @@
   },
   {
     "ContainingType": "TBLApi.Controllers.UsersController",
+    "Method": "UpdateModeratorStatistics",
+    "RelativePath": "api/Users/update",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TBLApi.Controllers.UsersController\u002BStatisticsUpdateRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TBLApi.Controllers.UsersController",
     "Method": "UpdateAvatar",
     "RelativePath": "api/Users/update-avatar/{id}",
     "HttpMethod": "PUT",

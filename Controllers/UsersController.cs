@@ -358,7 +358,52 @@ namespace TBLApi.Controllers
 
             return Ok(user);
         }
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateModeratorStatistics([FromBody] StatisticsUpdateRequest request)
+        {
+            try
+            {
+                var stats = await _context.ModeratorStatistics
+                    .FirstOrDefaultAsync(s => s.ModeratorId == request.ModeratorId);
 
+                if (stats == null)
+                {
+                    return NotFound("Statistics not found");
+                }
+
+                switch (request.Field)
+                {
+                    case "BlockedProfiles":
+                        stats.BlockedProfiles += request.IncrementBy;
+                        break;
+                    case "ClosedTickets":
+                        stats.ClosedTickets += request.IncrementBy;
+                        break;
+                    case "RejectedTickets":
+                        stats.RejectedTickets += request.IncrementBy;
+                        break;
+                    case "RestrictedProfiles":
+                        stats.RestrictedProfiles += request.IncrementBy;
+                        break;
+                    default:
+                        return BadRequest("Invalid field");
+                }
+
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Failed to update statistics: {ex.Message}");
+            }
+        }
+
+        public class StatisticsUpdateRequest
+        {
+            public int ModeratorId { get; set; }
+            public string Field { get; set; }
+            public int IncrementBy { get; set; }
+        }
 
         public class ResetPasswordDto
         {
