@@ -30,7 +30,7 @@ namespace TBLApi.Controllers
         {
             try
             {
-                // Преобразуем `Day` из `DateOnly` в `DateTime` для работы с базой данных
+                // Убедитесь, что `Day` был правильно передан и преобразуйте его из строки, если необходимо
                 var scheduleDate = schedule.Day;
 
                 var existingSchedule = await _context.Schedules
@@ -38,24 +38,13 @@ namespace TBLApi.Controllers
 
                 if (existingSchedule != null)
                 {
-                    // Обновляем существующее расписание
                     existingSchedule.StartTime = schedule.StartTime;
                     existingSchedule.EndTime = schedule.EndTime;
                     existingSchedule.BreakDuration = schedule.BreakDuration;
                 }
                 else
                 {
-                    // Добавляем новое расписание
-                    var newSchedule = new Schedule
-                    {
-                        SpecialistId = schedule.SpecialistId,
-                        Day = scheduleDate, // Сохраняем дату как `DateTime`
-                        StartTime = schedule.StartTime,
-                        EndTime = schedule.EndTime,
-                        BreakDuration = schedule.BreakDuration,
-                       
-                    };
-                    _context.Schedules.Add(newSchedule);
+                    _context.Schedules.Add(schedule);
                 }
 
                 await _context.SaveChangesAsync();
@@ -63,9 +52,10 @@ namespace TBLApi.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Ошибка при добавлении или обновлении расписания: {ex.Message}");
+                return BadRequest($"Ошибка при добавлении или обновлении расписания: {ex.Message}");
             }
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSchedule(int id)
