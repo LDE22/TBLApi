@@ -120,7 +120,7 @@ namespace TBLApi.Controllers
         {
             _logger.LogInformation("Начат процесс сброса пароля.");
 
-            if (string.IsNullOrWhiteSpace(model.Token) || string.IsNullOrWhiteSpace(model.NewPassword))
+            if (string.IsNullOrWhiteSpace(model.Token) || string.IsNullOrWhiteSpace(model.NewPassword) )
             {
                 _logger.LogWarning("Токен или новый пароль не были предоставлены.");
                 return BadRequest(new { message = "Токен и новый пароль обязательны." });

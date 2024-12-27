@@ -53,7 +53,7 @@ namespace TBLApi.Controllers
                         StartTime = schedule.StartTime,
                         EndTime = schedule.EndTime,
                         BreakDuration = schedule.BreakDuration,
-                        BookedIntervals = schedule.BookedIntervals // Если используется JSON-строка
+                       
                     };
                     _context.Schedules.Add(newSchedule);
                 }
